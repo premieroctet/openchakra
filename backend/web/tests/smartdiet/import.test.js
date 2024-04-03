@@ -62,6 +62,10 @@ describe('Test imports', () => {
     await fixFiles(ROOT)
   })
   
+  afterEach(async () => {
+    await saveCache()
+  })
+
   afterAll(async () => {
     await updateImportedCoachingStatus()
     await updateDietCompanies()
@@ -72,13 +76,13 @@ describe('Test imports', () => {
     await mongoose.connection.close()
   })
 
-  it('must import companies', async () => {
+  it.only('must import companies', async () => {
     const res = await importCompanies(path.join(ROOT, 'smart_project.csv'))
     const companies=await Company.find()
     expect(companies.length).toEqual(13)
   })
 
-  it('must import patients', async () => {
+  it.only('must import patients', async () => {
     const res = await importPatients(path.join(ROOT, 'smart_patient.csv')).catch(console.error)
     await forcePasswords()
     const users=await User.find({source: 'import'})
@@ -94,7 +98,7 @@ describe('Test imports', () => {
     await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
   })
 
-  it('must import one offer per imported company', async () => {
+  it.only('must import one offer per imported company', async () => {
     const res = await importOffers(path.join(ROOT, 'smart_coaching.csv'))
     const offersCount=await Offer.countDocuments({migration_id: {$ne:null}})
     const migratedCompanyCount=await Company.countDocuments({migration_id: {$ne: null}})
@@ -124,7 +128,7 @@ describe('Test imports', () => {
     expect(dietsTest[0].registration_status).toEqual(DIET_REGISTRATION_STATUS_ACTIVE)
   })
 
-  it('must upsert coachings', async () => {
+  it.only('must upsert coachings', async () => {
     let res = await importCoachings(path.join(ROOT, 'smart_coaching.csv'))
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user}).populate('progress')
@@ -185,13 +189,13 @@ describe('Test imports', () => {
     expect(keys.length).toEqual(7)
   })
 
-  it.only('must upsert progress quizz', async () => {
+  it('must upsert progress quizz', async () => {
     let res = await importProgressQuizz(path.join(ROOT, 'smart_criteria.csv'))
     const quizz=await Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
     expect(quizz.questions.every(q => !!q.migration_id)).toBeTruthy
   })
 
-  it.only('must attach progress quizz to its coaching', async () => {
+  it('must attach progress quizz to its coaching', async () => {
     const quizzs=await UserQuizz.find({type: QUIZZ_TYPE_PROGRESS})
     let found=0
     await runPromisesWithDelay(quizzs.map((q, idx) => async () => {
@@ -211,7 +215,7 @@ describe('Test imports', () => {
     console.log('found', found, '/', quizzs.length)
   })
 
-  it.only('must upsert user progress quizz', async () => {
+  it('must upsert user progress quizz', async () => {
     let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
   })
 

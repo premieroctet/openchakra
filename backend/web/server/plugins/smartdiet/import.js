@@ -481,7 +481,15 @@ const DIET_MIGRATION_KEY='migration_id'
 const COACHING_MAPPING={
   [CREATED_AT_ATTRIBUTE]: ({record}) => moment(record.orderdate),
   user: ({cache, record}) => cache('user', record.SDPATIENTID),
-  offer: ({cache, record}) => cache('offer', record.SDPROGRAMTYPE),
+  offer: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID))
+      .populate({path: 'company', populate: 'current_offer'})
+    const offer=user?.company?.current_offer?._id
+    console.log('coaching user', record.SDPATIENTID, !!user)
+    console.log('coaching company', !!user?.company)
+    console.log('coaching company offer', !!user?.company?.current_offer)
+    return offer
+  },
   migration_id: 'SDPROGRAMID',
   diet: ({cache, record}) => cache('user', record.SDDIETID),
   smartdiet_patient_id: 'SDPATIENTID',
@@ -766,10 +774,8 @@ const importPatients = async input_file => {
   const schema=User.schema
   schema.paths.password.setters=[]
   // End deactivate password encryption
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => 
+  return loadRecords(input_file)
+    .then(records => 
       importData({model: 'user', data:records, mapping:PATIENT_MAPPING, identityKey: PATIENT_KEY, 
         migrationKey: PATIENT_MIGRATION_KEY, progressCb: progressCb()})
     )
