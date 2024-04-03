@@ -16,7 +16,7 @@ const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIE
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
 const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages } = require('../../server/plugins/smartdiet/import')
-const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
+const { getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
 const fs=require('fs')
@@ -76,13 +76,13 @@ describe('Test imports', () => {
     await mongoose.connection.close()
   })
 
-  it.only('must import companies', async () => {
+  it('must import companies', async () => {
     const res = await importCompanies(path.join(ROOT, 'smart_project.csv'))
     const companies=await Company.find()
     expect(companies.length).toEqual(13)
   })
 
-  it.only('must import patients', async () => {
+  it('must import patients', async () => {
     const res = await importPatients(path.join(ROOT, 'smart_patient.csv')).catch(console.error)
     await forcePasswords()
     const users=await User.find({source: 'import'})
@@ -98,7 +98,7 @@ describe('Test imports', () => {
     await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
   })
 
-  it.only('must import one offer per imported company', async () => {
+  it('must import one offer per imported company', async () => {
     const res = await importOffers(path.join(ROOT, 'smart_coaching.csv'))
     const offersCount=await Offer.countDocuments({migration_id: {$ne:null}})
     const migratedCompanyCount=await Company.countDocuments({migration_id: {$ne: null}})
@@ -128,7 +128,7 @@ describe('Test imports', () => {
     expect(dietsTest[0].registration_status).toEqual(DIET_REGISTRATION_STATUS_ACTIVE)
   })
 
-  it.only('must upsert coachings', async () => {
+  it('must upsert coachings', async () => {
     let res = await importCoachings(path.join(ROOT, 'smart_coaching.csv'))
     const user=await User.findOne({email: PATIENT_EMAIL})
     const coachings=await Coaching.find({user}).populate('progress')
@@ -215,18 +215,18 @@ describe('Test imports', () => {
     console.log('found', found, '/', quizzs.length)
   })
 
-  it('must upsert user progress quizz', async () => {
-    let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
-  })
-
   it('must upsert quizz questions answers', async () => {
     let res = await importQuizzQuestionAnswer(path.join(ROOT, 'smart_question.csv'))
     const questions=await QuizzQuestion.find({migration_id: {$ne:null}})
     expect(questions).toHaveLength(217)
     const quizz=await Quizz.find()
     expect(quizz.some(q => q.questions.length>0)).toBe(true)
-    await prepareCache()
     console.log(lodash(getCacheKeys()).filter(k => k.split('/')[0]=='user_coaching').uniq().value())
+  })
+
+
+  it.only('must upsert user progress quizz', async () => {
+    let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
   })
 
   //TODO Fix it

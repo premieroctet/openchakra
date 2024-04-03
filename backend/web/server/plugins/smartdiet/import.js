@@ -984,7 +984,7 @@ const getCriterionAnswer = async (criterion_id, status) => {
   }
   const quizz=await Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate({path: 'questions', populate: 'available_answers'})
   const answer_id=quizz.questions.find(q => q.migration_id==criterion_id)
-    .available_answers.find(a => a.text=COACHING_QUESTION_STATUS[STATUS_MAPPING[status]])._id
+    .available_answers.find(a => a.text==COACHING_QUESTION_STATUS[STATUS_MAPPING[status]])._id
   setCache(model, key, answer_id)
   return answer_id
 }
@@ -1003,15 +1003,10 @@ const importUserProgressQuizz = async (input_file) => {
     return result
   }
 
-  const SLICE=0
   return loadRecords(input_file)
-    .then(records => runPromisesWithDelay(records.slice(SLICE).map((record, idx) => async () => {
+    .then(records => runPromisesWithDelay(records.map((record, idx) => async () => {
       if (idx%500==0)  {
-        console.log(idx,'/', records.length-SLICE)
-        if (global.gc) {
-          console.log('gc')
-          global.gc();
-      }
+        console.log(idx,'/', records.length)
       }
       const coachingId=cache('coaching', record.SDPROGRAMID)
       const progress=await getProgress(coachingId)
