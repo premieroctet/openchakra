@@ -77,9 +77,6 @@ exports.sendFileToAWS = async (fullpath, type) => {
 
   const upload=new Upload({client: s3,params})
   const res=await upload.done().catch(console.error)
-
-  console.log('res is', res)
-
   return res
 }
 

@@ -45,9 +45,15 @@ const UserQuizz = require('../../models/UserQuizz')
 const { isNewerThan } = require('../../utils/filesystem')
 
 const DEFAULT_PASSWORD='DEFAULT'
-const PRESTATION_DURATION=45
-const PRESTATION_NAME=`Générique ${PRESTATION_DURATION} minutes`
-const PRESTATION_SMARTAGENDA_ID=-1
+
+const ASS_PRESTATION_DURATION=45
+const ASS_PRESTATION_NAME=`Bilan générique ${ASS_PRESTATION_DURATION} minutes`
+const ASS_PRESTATION_SMARTAGENDA_ID=-1
+
+const FOLLOWUP_PRESTATION_DURATION=15
+const FOLLOWUP_PRESTATION_NAME=`Suivi générique ${FOLLOWUP_PRESTATION_DURATION} minutes`
+const FOLLOWUP_PRESTATION_SMARTAGENDA_ID=-2
+
 const KEY_NAME='Clé import'
 
 const QUIZZ_FACTOR=100
@@ -91,8 +97,8 @@ const NUT_REASON={
 }
 
 
-const normalizeTel = tel => {
-  let newTel=tel
+const normalizePhone = tel => {
+  let newTel=tel?.replace(/ /g, '')
   if (newTel?.length==9) {
     newTel=`0${newTel}`
   }
@@ -119,9 +125,9 @@ const fixPatients = async directory => {
     [/\@gmailcom"/g, '@gmail.com"'], [/\@gmail\.c"/g, '@gmail.com"'], [/\@aolcom"/g, '@aol.com"'], [/\@orangefr"/g, '@orange.fr"'], 
     [/@sfr"/g, '@sfr.fr"'], [/\@yahoofr/g, "@yahoo.fr"], [/\@hotmailcom"/g, 'hotmail.com"'], [/\@neuffr"/g, '@neuf.fr"'], 
     [/\@msncom"/g, '@msn.com"'], [/\@gmail"/g, '@gmail.com"'], [/\@free.f"/g, '@free.fr"'], [/\@orange,fr/g, 'orange.fr'],
-    [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/, 'francksurgis@live.fr'],
+    [/\@live\.f"/g, '@live.fr"'], [/\@yahoo\.f"/g, '@yahoo.fr"'], [/francksurgis\.\@live\.fr/g, 'francksurgis@live.fr'],
     [/\@outlook\.f"/g, '@outlook.fr"'], [/\@yahoo"/g, '@yahoo.fr"'], [/\@lapos"/g, '@laposte.net"'], [/\@lapost"/g, '@laposte.net"'],
-    [/yanis69240hotmail.com/, 'yanis69240@hotmail.com']
+    [/yanis69240hotmail.com/g, 'yanis69240@hotmail.com']
 
   ]
 
@@ -129,15 +135,51 @@ const fixPatients = async directory => {
 }
 
 const fixDiets = directory => {
-  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\""/g, "'"], [/\\"/g, "'"], [/\\\\/g, ''],]
+  const REPLACES=[['UPPER(lastname)', 'lastname'], [/\\"/g, "'"], ]
   replaceInFile(path.join(directory, 'smart_diets.csv'), REPLACES)
 }
 
-const fixAppointments = directory => {
+const fixAppointments = async directory => {
+  const INPUT=path.join(directory, 'smart_consultation.csv')
+  const MIS_INPUT=path.join(directory, 'smart_mis.csv')
+  const EO_INPUT=path.join(directory, 'smart_eo.csv')
+  const OUTPUT=path.join(directory, 'consultation.csv')
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
-  replaceInFile(path.join(directory, 'smart_consultation.csv'), REPLACES)
+  replaceInFile(INPUT, REPLACES)
+  let records=await loadRecords(INPUT)
+
+  if (isNewerThan(OUTPUT, INPUT) && isNewerThan(OUTPUT, MIS_INPUT) && isNewerThan(OUTPUT, EO_INPUT)) {
+    console.log('no need to generate appts')
+    return 
+  }
+  console.log('Generating appts')
+  // Remove MIS appointments
+  console.log('records before MIS filter', records.length)
+  const mis=(await loadRecords(MIS_INPUT)).map(record => record.SDCONSULTID)
+  records=records.filter(r => !mis.includes(r.SDCONSULTID))
+  console.log('records after MIS filter', records.length)
+
+  // Remove EO appointments
+  console.log('records before EO filter', records.length)
+  const eo=(await loadRecords(EO_INPUT)).map(record => record.SDCONSULTID)
+  records=records.filter(r => !eo.includes(r.SDCONSULTID))
+  console.log('records after EO filter', records.length)
+  
+  const firstAppointments=lodash(records).groupBy('SDPROGRAMID')
+    .mapValues(consults => lodash.minBy(consults, c => moment(c.date)).SDCONSULTID)
+    .value()
+  const ASS_HEADER='assessment'
+  const keys=[...Object.keys(records[0]), ASS_HEADER]
+  const result=[keys.join(';')]
+  records.forEach(record => {
+    const line=keys.map(k => k==ASS_HEADER ? (firstAppointments[record.SDPROGRAMID]==record.SDCONSULTID ? "1" : "0"): record[k])
+    result.push(line.join(';'))
+  })
+
+  
+  fs.writeFileSync(OUTPUT, result.join('\n'))
 }
 
 const fixQuizz = directory => {
@@ -250,7 +292,7 @@ const generateProgress = async directory => {
   const outputPath = path.join(directory, 'progress.csv')
 
   if (isNewerThan(outputPath, consulPath) && isNewerThan(outputPath, consultProgressPath)) {
-    // console.log('No need to generate', outputPath)
+    console.log('No need to generate', outputPath)
     return
   }
   console.log('Generating', outputPath)
@@ -332,7 +374,10 @@ const SMART_OFFER_MAPPING= {
 }
 
 const OFFER_MAPPING= {
-  name: ({record}) => SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.name,
+  name: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID)).populate('company')
+    return `${SMART_OFFER_MAPPING[record.SDPROGRAMTYPE]?.name} pour ${user?.company?.name} `
+  },
   price: () => 1,
   groups_credit: () => 0,
   nutrition_credit: () => 3,
@@ -344,10 +389,18 @@ const OFFER_MAPPING= {
   podcasts_unlimited: () => true,
   video_unlimited: () => true,
   webinars_credit: () => 4,
-  company: ({cache, record}) => cache('company', record.SDPROJECTID),
-  validity_start: () => moment(),
+  company: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID))
+    return user?.company
+  },
+  validity_start: () => '01/01/2019',
   assessment_quizz: async () => await Quizz.findOne({type: QUIZZ_TYPE_ASSESSMENT}),
-  migration_id: 'SDPROGRAMTYPE',
+  // migration_id: company smart id * 1000 + smart program type
+  migration_id: async ({cache, record}) => {
+    const user=await User.findById(cache('user', record.SDPATIENTID)).populate('company')
+    const mig_id=user?.company?.migration_id*1000+(+record.SDPROGRAMTYPE)
+    return mig_id
+  },
 }
 
 const OFFER_KEY='name'
@@ -370,7 +423,8 @@ const PATIENT_MAPPING={
   pseudo: ({record}) => computePseudo(record),
   gender: ({record}) => GENDER_MAPPING[record.gender],
   birthday: ({record}) => lodash.isEmpty(record.birthdate) ? null:  moment(record.birthdate),
-  phone: ({record}) => normalizeTel(record.phone),
+  phone: ({record}) => normalizePhone(record.phone),
+  diet_comment: 'comments',
   migration_id: 'SDPATIENTID',
   source: () => 'import',
 }
@@ -404,7 +458,7 @@ const DIET_MAPPING={
   migration_id: 'SDID',
   zip_code: ({record}) => record.cp?.length==4 ? record.cp+'0' : record.cp,
   address: 'address',
-  phone: ({record}) => normalizeTel(record.phone),
+  phone: ({record}) => normalizePhone(record.phone),
   adeli: 'adelinumber',
   city: 'city',
   siret: ({record}) => siret.isSIRET(record.siret)||siret.isSIREN(record.siret) ? record.siret : null,
@@ -436,12 +490,12 @@ const COACHING_MAPPING={
 const COACHING_KEY=['user', CREATED_AT_ATTRIBUTE]
 const COACHING_MIGRATION_KEY='migration_id'
 
-const APPOINTMENT_MAPPING= prestation_id => ({
+const APPOINTMENT_MAPPING= (assessment_id, followup_id) => ({
   coaching: ({cache, record}) => cache('coaching', record.SDPROGRAMID),
   start_date: 'date',
   end_date: ({record}) => moment(record.date).add(45, 'minutes'),
   note: 'comments',
-  appointment_type: () => prestation_id,
+  appointment_type: ({record}) => +record.assessment ? assessment_id : followup_id,
   migration_id: 'SDCONSULTID',
   diet: async ({cache, record}) => {
     let diet=cache('user', record.SDDIETID)
@@ -524,7 +578,6 @@ const hashStringToDecimal = inputString => {
   const hashedString = hash.digest('hex')
   const decimalNumber = BigInt('0x' + hashedString)
   const res=parseInt(decimalNumber%BigInt(1000000000))
-  console.log(inputString, res)
   return res
 }
 
@@ -702,7 +755,6 @@ const importCompanies = async input_file => {
 const importOffers = async input_file => {
   return loadRecords(input_file)
     .then(records => {
-      records=lodash.uniqBy(records, 'SDPROGRAMTYPE')
       return importData({model: 'offer', data:records, mapping:OFFER_MAPPING, identityKey: OFFER_KEY, 
         migrationKey: OFFER_MIGRATION_KEY, progressCb: progressCb()})
     })
@@ -768,19 +820,24 @@ const importCoachings = async input_file => {
 }
 
 const importAppointments = async input_file => {
-  let prestation=await AppointmentType.findOne({title: PRESTATION_NAME})
-  if (!prestation) {
-    prestation=await AppointmentType.create({title: PRESTATION_NAME, duration: PRESTATION_DURATION, 
-      smartagenda_id: PRESTATION_SMARTAGENDA_ID})
+  let assessemntType=await AppointmentType.findOne({title: ASS_PRESTATION_NAME})
+  if (!assessemntType) {
+    assessemntType=await AppointmentType.create({title: ASS_PRESTATION_NAME, duration: ASS_PRESTATION_DURATION, 
+      smartagenda_id: ASS_PRESTATION_SMARTAGENDA_ID})
   }
-  prestation=prestation._id
 
-  const contents=fs.readFileSync(input_file)
+  let followupType=await AppointmentType.findOne({title: FOLLOWUP_PRESTATION_NAME})
+  if (!followupType) {
+    followupType=await AppointmentType.create({title: FOLLOWUP_PRESTATION_NAME, duration: FOLLOWUP_PRESTATION_DURATION, 
+      smartagenda_id: FOLLOWUP_PRESTATION_SMARTAGENDA_ID})
+  }
+
   return loadRecords(input_file)
-    .then(records => 
-      importData({model: 'appointment', data:records, mapping:APPOINTMENT_MAPPING(prestation), 
-      identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb()}
-    ))
+    .then(records => {
+      const mapping=APPOINTMENT_MAPPING(assessemntType._id, followupType._id)
+      return importData({model: 'appointment', data:records, mapping, 
+        identityKey: APPOINTMENT_KEY, migrationKey: APPOINTMENT_MIGRATION_KEY, progressCb: progressCb()})
+    })
 }
 
 const importMeasures = async input_file => {
@@ -841,12 +898,10 @@ const importUserQuizz = async input_file => {
       log(idx, '/', records.length)
       const userId=cache('user', record.SDPATIENTID)
       const quizzId=cache('quizz', record.SDQUIZID)
-      console.log('quizzid', quizzId)
       const coaching=await Coaching.findOne({user: userId}).sort({ [CREATED_AT_ATTRIBUTE]: -1 }).limit(1)
         .populate('quizz_templates')
         .populate('quizz')
       if (!coaching) {
-        console.log('no coaching')
         return Promise.reject(`No coaching for user ${record.SDPATIENTID}/${userId}`)
       }
       // Check if template exists
@@ -856,7 +911,6 @@ const importUserQuizz = async input_file => {
         const quizz=await Quizz.findById(quizzId).populate({path: 'questions', populate: 'available_answers'})
         const cloned=await quizz.cloneAsUserQuizz()
         coaching.quizz.push(cloned._id)
-        console.log(quizz.questions.length, cloned.questions.length)
         await coaching.save()
         return Promise.all(ORDERS.map(async (attribute, index) => {
           const answer=parseInt(record[attribute])
@@ -898,7 +952,6 @@ const importProgressQuizz = async input_file => {
         if (!question) {
           throw new Error(`Missing question:${record.name}`)
         }
-        console.log('setting', question._id, 'to', record.SDCRITERIAID)
         question.migration_id=record.SDCRITERIAID
         setCache('quizzQuestion', record.SDCRITERIAID, question._id)
         return question.save()
@@ -959,7 +1012,6 @@ const importUserProgressQuizz = async (input_file) => {
       const question=progress.questions.find(q => q.migration_id==record.SDCRITERIAID)
       const answer_id=await getCriterionAnswer(record.SDCRITERIAID, record.status)
       if (!question || !answer_id) {
-        console.log(`Question ${question}: answer ${answer_id}`)
         throw new Error(`Question ${question}: answer ${answer_id}`)
       }
       question.single_enum_answer=answer_id
@@ -1173,6 +1225,7 @@ const importOtherDiploma = async (input_file) => {
 }
 
 module.exports={
+  loadRecords,
   importCompanies,
   importOffers,
   importPatients,
@@ -1201,5 +1254,6 @@ module.exports={
   importNutAdvices,
   importNetworks, importDietNetworks, importDiploma,
   importOtherDiploma,
+  generateMessages,
 }
 
