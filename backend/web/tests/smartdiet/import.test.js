@@ -15,8 +15,8 @@ const Appointment=require('../../server/models/Appointment')
 const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages } = require('../../server/plugins/smartdiet/import')
-const { prepareCache, getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages, importPatientWeight } = require('../../server/plugins/smartdiet/import')
+const { getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
 const fs=require('fs')
@@ -92,6 +92,10 @@ describe('Test imports', () => {
 
   it('must import patients heights', async () => {
     await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
+  })
+
+  it.only('must import patients first weights', async () => {
+    return importPatientWeight(path.join(ROOT, 'smart_weight.csv')).catch(console.error)
   })
 
   it('must import one offer per imported company', async () => {
@@ -185,13 +189,13 @@ describe('Test imports', () => {
     expect(keys.length).toEqual(7)
   })
 
-  it.only('must upsert progress quizz', async () => {
+  it('must upsert progress quizz', async () => {
     let res = await importProgressQuizz(path.join(ROOT, 'smart_criteria.csv'))
     const quizz=await Quizz.findOne({type: QUIZZ_TYPE_PROGRESS}).populate('questions')
     expect(quizz.questions.every(q => !!q.migration_id)).toBeTruthy
   })
 
-  it.only('must attach progress quizz to its coaching', async () => {
+  it('must attach progress quizz to its coaching', async () => {
     const quizzs=await UserQuizz.find({type: QUIZZ_TYPE_PROGRESS})
     let found=0
     await runPromisesWithDelay(quizzs.map((q, idx) => async () => {
@@ -211,18 +215,18 @@ describe('Test imports', () => {
     console.log('found', found, '/', quizzs.length)
   })
 
-  it.only('must upsert user progress quizz', async () => {
-    let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
-  })
-
   it('must upsert quizz questions answers', async () => {
     let res = await importQuizzQuestionAnswer(path.join(ROOT, 'smart_question.csv'))
     const questions=await QuizzQuestion.find({migration_id: {$ne:null}})
     expect(questions).toHaveLength(217)
     const quizz=await Quizz.find()
     expect(quizz.some(q => q.questions.length>0)).toBe(true)
-    await prepareCache()
     console.log(lodash(getCacheKeys()).filter(k => k.split('/')[0]=='user_coaching').uniq().value())
+  })
+
+
+  it('must upsert user progress quizz', async () => {
+    let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
   })
 
   //TODO Fix it
@@ -241,8 +245,8 @@ describe('Test imports', () => {
   })
 
   it('must upsert conversation', async () => {
-    await importConversations(path.join(ROOT, 'conversation.csv'))
-    await importMessages(path.join(ROOT, 'message.csv'))
+    await importConversations(path.join(ROOT, 'wapp_conversations.csv'))
+    await importMessages(path.join(ROOT, 'wapp_messages.csv'))
   })
 
   it('must upsert specs', async () => {

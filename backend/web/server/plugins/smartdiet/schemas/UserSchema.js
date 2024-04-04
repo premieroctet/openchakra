@@ -556,7 +556,8 @@ UserSchema.virtual('_all_events', DUMMY_REF).get(function() {
 UserSchema.virtual("measures", {
   ref: "measure", // The Model to use
   localField: "_id", // Find in Model, where localField
-  foreignField: "user" // is equal to foreignField
+  foreignField: "user", // is equal to foreignField
+  options: {sort: 'date'},
 });
 
 UserSchema.virtual("last_measures", DUMMY_REF).get(function() {

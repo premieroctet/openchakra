@@ -21,12 +21,12 @@ const MessageSchema = new Schema({
   receiver: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required:[function(){!this.receiver && !this.group}, 'Un destinataire ou groupe est obligatoire'],
+    required:[function(){!this?.receiver && !this?.group}, 'Un destinataire ou groupe est obligatoire'],
   },
   group: {
     type: Schema.Types.ObjectId,
     ref: 'group',
-    required:[function(){!this.receiver && !this.group}, 'Un destinataire ou groupe est obligatoire'],
+    required:[function(){!this?.receiver && !this?.group}, 'Un destinataire ou groupe est obligatoire'],
   },
   attachment: {
     type: String,
