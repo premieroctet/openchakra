@@ -198,14 +198,14 @@ const setOffersOnCoachings = () => {
         coaching.save()
       }
     })))
-    .then(() => {
-      return Coaching.find({status: COACHING_STATUS_NOT_STARTED}, {_id:1})
-        .then(coachings => {
-          console.log('Updating', coachings.length, 'coaching status')
-          return runPromisesWithDelay(coachings.map(coaching => () => updateCoachingStatus(coaching._id)
-            .catch(err => console.error(`Coaching ${coaching._id}:${err}`))))
-          })
-      })
+    // .then(() => {
+    //   return Coaching.find({status: COACHING_STATUS_NOT_STARTED}, {_id:1})
+    //     .then(coachings => {
+    //       console.log('Updating', coachings.length, 'coaching status')
+    //       return runPromisesWithDelay(coachings.map(coaching => () => updateCoachingStatus(coaching._id)
+    //         .catch(err => console.error(`Coaching ${coaching._id}:${err}`))))
+    //       })
+    //   })
 }
 
 const databaseUpdate = async () => {
@@ -218,7 +218,7 @@ const databaseUpdate = async () => {
   await upgradeOffers()
   await upgradeParticularCompanyOffer()
   await upgradeCompanyOffers()
-  await setOffersOnCoachings()
+  //await setOffersOnCoachings() NOOOO
   await setCoachingAssQuizz()
 }
 
