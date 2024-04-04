@@ -472,7 +472,7 @@ const WEIGHT_MAPPING={
   migration_id: ({record}) => -record.SDPATIENTID,
   weight: 'weight',
   user: ({cache, record}) => cache('user', record.SDPATIENTID),
-  creation_date: 'created',
+  date: 'created',
 }
 
 const WEIGHT_KEY='migration_id'
