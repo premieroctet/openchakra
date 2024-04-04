@@ -181,6 +181,7 @@ function upsertRecord({model, record, identityKey, migrationKey, updateOnly}) {
       setCache(model.modelName, record[migrationKey], result._id)
       return result
     })
+    .catch(console.error)
 }
 
 const computeIdentityFilter = (identityKey, migrationKey, record) => {

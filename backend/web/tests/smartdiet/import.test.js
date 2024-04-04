@@ -55,29 +55,21 @@ const QUIZZ_ID = 17
 describe('Test imports', () => {
 
   beforeAll(async () => {
-    // console.log('Before opening database', DBNAME)
-    // await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
-    // console.log('Opened database', DBNAME)
-    // await loadCache()
-    // await fixFiles(ROOT)
+    console.log('Before opening database', DBNAME)
+    await mongoose.connect(`mongodb://localhost/${DBNAME}`, MONGOOSE_OPTIONS)
+    console.log('Opened database', DBNAME)
+    await loadCache()
+    await fixFiles(ROOT)
   })
   
-  afterEach(async () => {
-    // await saveCache()
-  })
-
   afterAll(async () => {
-    // await updateImportedCoachingStatus()
-    // await updateDietCompanies()
-    // await saveCache()
-    // if (DROP) {
-    //   await mongoose.connection.dropDatabase()
-    // }
-    // await mongoose.connection.close()
-  })
-
-  it.only('Must generate messages', async () => {
-    return generateMessages(ROOT)
+    await updateImportedCoachingStatus()
+    await updateDietCompanies()
+    await saveCache()
+    if (DROP) {
+      await mongoose.connection.dropDatabase()
+    }
+    await mongoose.connection.close()
   })
 
   it('must import companies', async () => {
@@ -248,9 +240,9 @@ describe('Test imports', () => {
     await importUserImpactId(path.join(ROOT, 'smart_second_summary_reference.csv'))
   })
 
-  it.only('must upsert conversation', async () => {
-    await importConversations(path.join(ROOT, 'conversation.csv'))
-    await importMessages(path.join(ROOT, 'message.csv'))
+  it('must upsert conversation', async () => {
+    await importConversations(path.join(ROOT, 'wapp_conversations.csv'))
+    await importMessages(path.join(ROOT, 'wapp_messages.csv'))
   })
 
   it('must upsert specs', async () => {

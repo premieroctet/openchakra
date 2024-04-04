@@ -242,8 +242,13 @@ const loadRecords = async path =>  {
   return records
 }
 
-const getMessageId = (threadId, date) => {
-  return `${threadId}${moment(date).unix()}`
+const saveRecords = async (path, keys, data) =>  {
+  const msg=`Saving records to ${path}`
+  console.time(msg)
+  const header=keys.join(';')
+  const contents=data.map(d => keys.map(k => d[k]).join(';'))
+  const fullContents=header+'\n'+contents.join('\n')
+  return fs.writeFileSync(path, fullContents)
 }
 
 const generateMessages = async directory =>{
@@ -261,50 +266,51 @@ const generateMessages = async directory =>{
     // console.log('No need to generate', OUTPUT)
     return
   }
+
   console.log('Generating', CONVERSATIONS_OUTPUT, 'and', MESSAGES_OUTPUT)
 
-  const messages=await loadRecords(MESSAGES)
+  const sd_messages=await loadRecords(MESSAGES)
   const threads=await loadRecords(THREADS)
-  const threadCreators=lodash(threads).map(({SDTHREADID, SDCREATORID})=> [SDTHREADID, SDCREATORID]).fromPairs().value()
 
   const createCantorKey = (user1, user2) => {
     const users=[parseInt(user1), parseInt(user2)].sort()
     return pairing.pair(...users)
   }
 
-  const conversations=lodash(messages)
-    .map(r => ({...r, SDCREATORID: threadCreators[r.SDTHREADID]}))
-    .map(({SDCREATORID, SDSENDERID, SDTHREADID}) => ({CONVID: createCantorKey(SDCREATORID, SDSENDERID), SDTHREADID, SDSENDERID, SDCREATORID}))
-    .sortBy('SDTHREADID')
+  const conversations=lodash([...sd_messages, ...threads])
+    .map(({SDTHREADID, SDCREATORID, SDSENDERID}) => ({SDTHREADID, USERID: SDCREATORID || SDSENDERID}))
+    .groupBy('SDTHREADID')
+    .mapValues(users => lodash.uniq(users.map(r => parseInt(r.USERID))))
+    .pickBy(v => v.length==2)
+    .entries()
+    .map((([SDTHREADID, [USER1, USER2]]) => ({SDTHREADID, USER1, USER2, CONVID: createCantorKey(USER1, USER2)})))
+    .groupBy('CONVID')
+    .mapValues(threads => ({...threads[0], SDTHREADID: undefined, SDTHREADIDS: threads.map(t => t.SDTHREADID)}))
+    
+  const conversationKeys=['CONVID','USER1','USER2']
+  saveRecords(CONVERSATIONS_OUTPUT, conversationKeys, conversations)
 
-    fs.writeFileSync(CONVERSATIONS_OUTPUT, 'SDCONVID;SDUSER1;SDUSER2\n'+conversations.value().map(v => JSON.stringify(v)).join('\n'))
-  // const updatedMessages= messages.map(m => {...m, SDRECEIVERID: })
+  const getConvId = threadId => {
+    const conv=conversations.values().find(e => e.SDTHREADIDS.includes(threadId))
+    return parseInt(conv?.CONVID)
+  }
 
-  // const conversations=lodash(records)
-  //   .groupBy('SDTHREADID')
-  //   .mapValues(msgs => lodash.uniq(msgs.map(m => m.SDSENDERID)))
-  //   .entries()
-  //   .filter(([threadId, users]) => users.length==2)
-  //   .fromPairs()
-  //   .value()
-  
-  // // Generate conversation
-  // const convContents=['SDTHREADID;USER1;USER2']
-  // Object.entries(conversations).forEach(conv => convContents.push([conv[0], conv[1][0], conv[1][1]].join(';')))
-  // fs.writeFileSync(path.join(directory, 'conversation.csv'), convContents.join('\n'))
+  const getReceiver = (convId, sender) => {
+    const conv=conversations.values().find(conv => conv.CONVID==convId)
+    const receiver=conv.USER1==sender ? conv.USER2 : conv.USER1
+    return receiver
+  }
 
-  // // Generate messages
-  // const messContents=['MESSAGEID;SDTHREADID;SENDER;RECEIVER;DATE;MESSAGE']
-  // records.forEach(message => {
-  //   const users=conversations[message.SDTHREADID]
-  //   if (users) {
-  //     const sender=message.SDSENDERID
-  //     const receiver=users[0]==sender ? users[1] : users[0]
-  //     const msgId=getMessageId(message.SDTHREADID, message.datetime)
-  //     messContents.push([msgId,message.SDTHREADID,sender, receiver, message.datetime, message.message].join(';'))
-  //   }
-  // })
-  // fs.writeFileSync(OUTPUT, messContents.join('\n'))
+  const messages=lodash(sd_messages)
+    // Compute convid
+    .map(r => ({...r, CONVID: getConvId(r.SDTHREADID)}))
+    // Remove no CONVID entries (i.e. thread with one people only)
+    .filter(v => !!v.CONVID)
+    .map(msg => ({...msg, SENDER: msg.SDSENDERID, RECEIVER: getReceiver(msg.CONVID, msg.SDSENDERID), message: `"${msg.message}"`}))
+    .value()
+
+  const messagesKeys=['CONVID', 'SENDER', 'RECEIVER', 'message', 'datetime']
+  saveRecords(MESSAGES_OUTPUT, messagesKeys, messages)
 }
 
 const generateProgress = async directory => {
@@ -637,20 +643,24 @@ const IMPACT_KEY='smartdiet_impact_id'
 const IMPACT_MIGRATION_KEY='migration_id'
 
 const CONVERSATION_MAPPING={
-  migration_id: 'SDTHREADID',
+  migration_id: 'CONVID',
   users: ({cache, record}) => [cache('user', record.USER1), cache('user', record.USER2)],
 }
 
 const CONVERSATION_KEY='migration_id'
 const CONVERSATION_MIGRATION_KEY='migration_id'
 
+const getMessageId = (convId, date) => {
+  return `${convId}${moment(date).unix()}`
+}
+
 const MESSAGE_MAPPING={
-  migration_id: ({record}) => getMessageId(record.SDTHREADID, record.DATE),
-  conversation: ({cache, record}) => cache('conversation', record.SDTHREADID),
+  migration_id: ({record}) => getMessageId(record.CONVID, record.datetime),
+  conversation: ({cache, record}) => cache('conversation', record.CONVID),
   receiver: ({cache, record}) => cache('user', record.RECEIVER),
   sender: ({cache, record}) => cache('user', record.SENDER),
-  content: 'MESSAGE',
-  [CREATED_AT_ATTRIBUTE]: 'DATE',
+  content: 'message',
+  [CREATED_AT_ATTRIBUTE]: 'datetime',
 }
 
 const MESSAGE_KEY='migration_id'
@@ -1084,18 +1094,14 @@ const importUserImpactId = async input_file => {
 }
 
 const importConversations = async input_file => {
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'conversation', data:records, mapping:CONVERSATION_MAPPING, 
-    identityKey: CONVERSATION_KEY, migrationKey: CONVERSATION_MIGRATION_KEY, progressCb: progressCb()}))
+  return loadRecords(input_file)
+    .then(records => importData({model: 'conversation', data:records, mapping:CONVERSATION_MAPPING, 
+      identityKey: CONVERSATION_KEY, migrationKey: CONVERSATION_MIGRATION_KEY, progressCb: progressCb()}))
 }
 
 const importMessages = async input_file => {
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'message', data:records, mapping:MESSAGE_MAPPING, 
+  return loadRecords(input_file)
+    .then(records => importData({model: 'message', data:records, mapping:MESSAGE_MAPPING, 
     identityKey: MESSAGE_KEY, migrationKey: MESSAGE_MIGRATION_KEY, progressCb: progressCb()}))
 }
 
@@ -1247,7 +1253,7 @@ const importOtherDiploma = async (input_file) => {
 }
 
 module.exports={
-  loadRecords,
+  loadRecords, saveRecords,
   importCompanies,
   importOffers,
   importPatients,
