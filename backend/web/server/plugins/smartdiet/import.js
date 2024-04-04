@@ -468,6 +468,18 @@ const HEIGHT_MAPPING={
 const HEIGHT_KEY='_id'
 const HEIGHT_MIGRATION_KEY='migration_id'
 
+const WEIGHT_MAPPING={
+  migration_id: ({record}) => -record.SDPATIENTID,
+  weight: 'weight',
+  user: ({cache, record}) => cache('user', record.SDPATIENTID),
+  creation_date: 'created',
+}
+
+const WEIGHT_KEY='migration_id'
+const WEIGHT_MIGRATION_KEY='migration_id'
+
+
+
 const DIET_STATUS_MAPPING={
   0: DIET_REGISTRATION_STATUS_PENDING,
   1: DIET_REGISTRATION_STATUS_PENDING,
@@ -1144,6 +1156,13 @@ const importPatientHeight = async input_file => {
   )
 }
 
+const importPatientWeight = async input_file => {
+  return loadRecords(input_file)
+    .then(records => importData({model: 'measure', data:records, mapping:WEIGHT_MAPPING, 
+    identityKey: WEIGHT_KEY, migrationKey: WEIGHT_MIGRATION_KEY, progressCb: progressCb()})
+  )
+}
+
 const importFoodDocuments = async input_file => {
   return loadRecords(input_file)
     .then(records => importData({model: 'foodDocument', data:records, mapping:FOOD_DOCUMENT_MAPPING, 
@@ -1276,7 +1295,7 @@ module.exports={
   importMessages,
   updateImportedCoachingStatus,
   updateDietCompanies,
-  importSpecs, importDietSpecs, importPatientHeight,
+  importSpecs, importDietSpecs, importPatientHeight, importPatientWeight,
   importFoodDocuments,
   importUserFoodDocuments,
   importNutAdvices,
