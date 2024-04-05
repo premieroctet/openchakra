@@ -771,6 +771,7 @@ declareVirtualField({
   }),
   declareVirtualField({
     model: m, field: 'nutrition_advices', instance: 'Array', multiple: true,
+    requires: 'email',
     caster: {
       instance: 'ObjectID',
       options: { ref: 'nutritionAdvice' }
