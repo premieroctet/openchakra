@@ -316,7 +316,7 @@ const generateMessages = async directory =>{
 const generateProgress = async directory => {
   const consulPath=path.join(directory, 'smart_consultation.csv')
   const consultProgressPath = path.join(directory, 'smart_consultation_progress.csv')
-  const outputPath = path.join(directory, 'progress.csv')
+  const outputPath = path.join(directory, 'wapp_progress.csv')
 
   if (isNewerThan(outputPath, consulPath) && isNewerThan(outputPath, consultProgressPath)) {
     console.log('No need to generate', outputPath)
@@ -469,10 +469,11 @@ const HEIGHT_KEY='_id'
 const HEIGHT_MIGRATION_KEY='migration_id'
 
 const WEIGHT_MAPPING={
-  migration_id: ({record}) => -record.SDPATIENTID,
+  // Weight from summary
+  migration_id: ({record}) => -record.patient_id,
   weight: 'weight',
-  user: ({cache, record}) => cache('user', record.SDPATIENTID),
-  date: 'created',
+  user: ({cache, record}) => cache('user', record.patient_id),
+  date: 'updated',
 }
 
 const WEIGHT_KEY='migration_id'

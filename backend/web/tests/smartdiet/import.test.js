@@ -61,7 +61,11 @@ describe('Test imports', () => {
     await loadCache()
     await fixFiles(ROOT)
   })
-  
+
+  afterEach(async () => {
+    return saveCache()
+  })
+
   afterAll(async () => {
     await updateImportedCoachingStatus()
     await updateDietCompanies()
@@ -95,7 +99,7 @@ describe('Test imports', () => {
   })
 
   it.only('must import patients first weights', async () => {
-    return importPatientWeight(path.join(ROOT, 'smart_weight.csv')).catch(console.error)
+    return importPatientWeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
   })
 
   it('must import one offer per imported company', async () => {
@@ -226,7 +230,7 @@ describe('Test imports', () => {
 
 
   it('must upsert user progress quizz', async () => {
-    let res = await importUserProgressQuizz(path.join(ROOT, 'progress.csv'))
+    let res = await importUserProgressQuizz(path.join(ROOT, 'wapp_progress.csv'))
   })
 
   //TODO Fix it
