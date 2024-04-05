@@ -31,7 +31,11 @@ const FoodDocumentSchema = new Schema({
     type: String,
     enum: Object.keys(FOOD_DOCUMENT_TYPE),
     required: [true, 'Le type est obligatoire'],
-  }
+  },
+  migration_id: {
+    type: Number,
+    required: false
+  },
 }, schemaOptions)
 
 FoodDocumentSchema.virtual('url', DUMMY_REF).get(function() {

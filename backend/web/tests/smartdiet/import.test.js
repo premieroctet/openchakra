@@ -15,7 +15,7 @@ const Appointment=require('../../server/models/Appointment')
 const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages, importPatientWeight } = require('../../server/plugins/smartdiet/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages, importPatientWeight, fixFoodDocuments } = require('../../server/plugins/smartdiet/import')
 const { getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -98,7 +98,7 @@ describe('Test imports', () => {
     await importPatientHeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
   })
 
-  it.only('must import patients first weights', async () => {
+  it('must import patients first weights', async () => {
     return importPatientWeight(path.join(ROOT, 'smart_summary.csv')).catch(console.error)
   })
 
@@ -262,14 +262,18 @@ describe('Test imports', () => {
   })
 
   it('must upsert food documents', async () => {
-    await importFoodDocuments(path.join(ROOT, 'smart_fiche.csv'))
+    return importFoodDocuments(
+      path.join(ROOT, 'smart_fiche.csv'), 
+      path.join(ROOT, 'wapp_fiche_mapping.csv'),
+      path.join(ROOT, 'fiches')
+    )
   })
 
-  it('must upsert user food documents', async () => {
+  it.only('must upsert user food documents', async () => {
     await importUserFoodDocuments(path.join(ROOT, 'smart_patient_fiches.csv'))
   })
 
-  it('must upsert nut advices', async () => {
+  it.only('must upsert nut advices', async () => {
     await importNutAdvices(path.join(ROOT, 'smart_nutadvice.csv'))
   })
 

@@ -9,11 +9,11 @@ const Schema = mongoose.Schema
 const KeySchema = new Schema({
   name: {
     type: String,
-    required: [true, 'Le nom est obligatoire'],
+    required: [true, `Le nom est obligatoire`],
   },
   picture: {
     type: String,
-    required: [true, 'L\'illustration est obligatoire'],
+    required: [true, `L\'illustration est obligatoire`],
   },
   color: {
     type: String,

@@ -44,6 +44,7 @@ const { sendFilesToAWS, sendFileToAWS } = require('../../middlewares/aws')
 const UserQuizz = require('../../models/UserQuizz')
 const { isNewerThan } = require('../../utils/filesystem')
 const pairing =require('@progstream/cantor-pairing')
+const FoodDocument = require('../../models/FoodDocument')
 const DEFAULT_PASSWORD='DEFAULT'
 
 const ASS_PRESTATION_DURATION=45
@@ -355,9 +356,26 @@ const generateProgress = async directory => {
 
 const fixFoodDocuments = async directory => {
   const REPLACES=[
-    [/\\"/g, "'"], [/\\\\/g, ''],
+    [/\\"/g, "'"], [/\\\\/g, ''], [/’/g, "'"]
   ]
   replaceInFile(path.join(directory, 'smart_fiche.csv'), REPLACES)
+  const fichesRecords=await loadRecords(path.join(directory, 'smart_fiche.csv'))
+  const mappingRecords=await loadRecords(path.join(directory, 'wapp_fiche_mapping.csv'))
+  const getMappingName = originalName => {
+    const mappingName=mappingRecords.find(record => record.smart_name==originalName)?.wapp_name
+    return mappingName
+  }
+  // Check existence of mapped names in DB
+  const missingDbDocuments=(await Promise.all(
+    mappingRecords
+      .filter(r => !!r.wapp_name)
+      .map(r => FoodDocument.exists({name: r.wapp_name})
+        .then(exists => exists ? '': `No document ${r.wapp_name} in DB`)
+      )
+  )).filter(v => !!v)
+  if (!lodash.isEmpty(missingDbDocuments)) {
+    throw new Error(`Not found in DB: ${missingDbDocuments}`)  
+  }
 }
 
 const fixFiles = async directory => {
@@ -629,10 +647,21 @@ const hashStringToDecimal = inputString => {
   return res
 }
 
+const SMART_POINT_MAPPING={
+  0: `Pas de clé`,
+  1: `Je bouge`,
+  2: `Je dors`,
+  3: `Je gère`,
+  4: `J'équilibre`,
+  5: `Je m'organise`,
+  6: `J'achète`,
+  7: `Je ressens`,
+}
+
+
 const KEY_MAPPING={
-  migration_id: ({record}) => hashStringToDecimal(record.smartpoint),
+  migration_id: ({record}) => Object.entries(SMART_POINT_MAPPING).find(([k, text]) => text==record.smartpoint) [0],
   name: 'smartpoint',
-  text: 'secondanswer',
 }
 
 const KEY_KEY='name'
@@ -687,28 +716,22 @@ const SPEC_MAPPING={
 const SPEC_KEY='name'
 const SPEC_MIGRATION_KEY='migration_id'
 
-const SMART_POINT_MAPPING={
-  0: `Je gère`,
-  1: `Je bouge`,
-  2: `Je dors`,
-  3: `Je gère`,
-  4: `J'équilibre`,
-  5: `Je m'organise`,
-  6: `J'achète`,
-  7: `Je ressens`,
-}
-
-const FOOD_DOCUMENT_MAPPING={
+const FOOD_DOCUMENT_MAPPING= mapping => ({
   migration_id: 'IDFICHESD',
-  name: 'name',
+  name: ({record}) => mapping[record.name] || record.name,
   description: 'description',
   type: () => FOOD_DOCUMENT_TYPE_NUTRITION,
   key: ({record, cache}) => {
-    const keyStr=SMART_POINT_MAPPING[record.smartpoint];
-    const keyId=hashStringToDecimal(keyStr)
-    return cache('key', keyId)
-  }
-}
+    // If no key => J'équilibre
+    const keyId=cache('key', +record.smartpoint || 4)
+    return keyId
+  },
+  document: async ({record, foodDocumentDirectory}) => {
+    const url=await getS3FileForFoodDocument(foodDocumentDirectory, record.IDFICHESD, 'food')
+      .catch(err => console.error(record, err))
+    return url
+  },
+})
 
 const FOOD_DOCUMENT_KEY='name'
 const FODD_DOCUMENT_MIGRATION_KEY='migration_id'
@@ -986,10 +1009,10 @@ const importUserQuizz = async input_file => {
 
 const importKeys = async input_file => {
   const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => importData({model: 'key', data:records, mapping:KEY_MAPPING, 
-    identityKey: KEY_KEY, migrationKey: KEY_MIGRATION_KEY, progressCb: progressCb()}))
+  return loadRecords(input_file)
+    .then(records => importData({model: 'key', data:records, mapping:KEY_MAPPING, 
+        identityKey: KEY_KEY, migrationKey: KEY_MIGRATION_KEY, progressCb: progressCb()})
+    )
 }
 
 const importProgressQuizz = async input_file => {
@@ -1164,11 +1187,16 @@ const importPatientWeight = async input_file => {
   )
 }
 
-const importFoodDocuments = async input_file => {
+const importFoodDocuments = async (input_file, mapping_file, documents_directory) => {
+  let mapping=(await loadRecords(mapping_file))
+    .filter(record => !lodash.isEmpty(record.wapp_name))
+    .map(record => [record.smart_name, record.wapp_name])
+  mapping = Object.fromEntries(mapping)
   return loadRecords(input_file)
-    .then(records => importData({model: 'foodDocument', data:records, mapping:FOOD_DOCUMENT_MAPPING, 
-      identityKey: FOOD_DOCUMENT_KEY, migrationKey: FODD_DOCUMENT_MIGRATION_KEY, progressCb: progressCb()}
-    )
+    .then(records => importData({model: 'foodDocument', data:records, mapping:FOOD_DOCUMENT_MAPPING(mapping), 
+      identityKey: FOOD_DOCUMENT_KEY, migrationKey: FODD_DOCUMENT_MIGRATION_KEY, progressCb: progressCb(),
+      foodDocumentDirectory: documents_directory
+    })
   )
 }
 
@@ -1189,9 +1217,7 @@ const importUserFoodDocuments = async input_file => {
       idx%1000==0 && console.log(idx, '/', records.length)
       const ficheId=cache('foodDocument', record.SDFICHEID)
       const coachingId=await getCoaching(record.SDPATIENTID)
-      await Coaching.findByIdAndUpdate(coachingId, {$addToSet: {food_documents: ficheId}})
-        .then(console.log)
-        .catch(console.error)
+      return Coaching.findByIdAndUpdate(coachingId, {$addToSet: {food_documents: ficheId}})
     })))
 }
 
@@ -1225,6 +1251,24 @@ const findFileForDiet = async (directory, firstname, lastname) => {
 
 const getS3FileForDiet = async (directory, firstname, lastname, type) => {
   const fullpath=await findFileForDiet(directory, firstname, lastname)
+  if (fullpath) {
+    const s3File=await sendFileToAWS(fullpath, type)
+      .catch(err => console.error('err on', fullpath))
+    // console.log('in S3 got', firstname, lastname, s3File.Location)
+    return s3File?.Location
+  }
+}
+
+const findFileForFoodDocument = async (directory, documentId) => {
+  const normalizedDietName=normalize(`fiche${documentId}`)
+  const files=getDirectoryFiles(directory)
+  const found=files[normalizedDietName]
+  // !!found && console.log('Found file', found, 'for', firstname, lastname)
+  return !!found ? path.join(directory, found) : null
+}
+
+const getS3FileForFoodDocument = async (directory, documentId, type) => {
+  const fullpath=await findFileForFoodDocument(directory, documentId)
   if (fullpath) {
     const s3File=await sendFileToAWS(fullpath, type)
       .catch(err => console.error('err on', fullpath))
@@ -1303,5 +1347,6 @@ module.exports={
   importNetworks, importDietNetworks, importDiploma,
   importOtherDiploma,
   generateMessages,
+  fixFoodDocuments,
 }
 
