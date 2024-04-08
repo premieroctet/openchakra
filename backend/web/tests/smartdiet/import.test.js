@@ -151,9 +151,7 @@ describe('Test imports', () => {
   })
 
   it('must update coaching status', async () => {
-    console.log('before')
     const coachings=await Coaching.find({migration_id: {$ne: null}, status: {$in: [null, COACHING_STATUS_NOT_STARTED]}})
-    console.log('update', coachings.length)
     const step=Math.ceil(coachings.length/10)
     await runPromisesWithDelay(coachings.map((c, idx) => () => {
       if (idx%step==0) {
@@ -269,11 +267,11 @@ describe('Test imports', () => {
     )
   })
 
-  it.only('must upsert user food documents', async () => {
+  it('must upsert user food documents', async () => {
     await importUserFoodDocuments(path.join(ROOT, 'smart_patient_fiches.csv'))
   })
 
-  it.only('must upsert nut advices', async () => {
+  it('must upsert nut advices', async () => {
     await importNutAdvices(path.join(ROOT, 'smart_nutadvice.csv'))
   })
 

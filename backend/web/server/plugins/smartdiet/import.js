@@ -183,6 +183,12 @@ const fixAppointments = async directory => {
   fs.writeFileSync(OUTPUT, result.join('\n'))
 }
 
+const createCantorKey = (value1, value2) => {
+  const values=[parseInt(value1), parseInt(value2)].sort()
+  return pairing.pair(...values)
+}
+
+
 const fixQuizz = directory => {
   const REPLACES=[
     [/.quilibre/g, 'Equilibre'], [/\/ Vegan/g, '/Vegan'], [/Apéro \!/g, 'Apéro'], [/Fr.quences/g, 'Fréquences'],
@@ -272,11 +278,6 @@ const generateMessages = async directory =>{
 
   const sd_messages=await loadRecords(MESSAGES)
   const threads=await loadRecords(THREADS)
-
-  const createCantorKey = (user1, user2) => {
-    const users=[parseInt(user1), parseInt(user2)].sort()
-    return pairing.pair(...users)
-  }
 
   const conversations=lodash([...sd_messages, ...threads])
     .map(({SDTHREADID, SDCREATORID, SDSENDERID}) => ({SDTHREADID, USERID: SDCREATORID || SDSENDERID}))
@@ -692,12 +693,12 @@ const CONVERSATION_MAPPING={
 const CONVERSATION_KEY='migration_id'
 const CONVERSATION_MIGRATION_KEY='migration_id'
 
-const getMessageId = (convId, date) => {
-  return `${convId}${moment(date).unix()}`
+const getMessageId = (dateTime, senderId) => {
+  return createCantorKey(moment(dateTime).unix(), senderId)
 }
 
 const MESSAGE_MAPPING={
-  migration_id: ({record}) => getMessageId(record.CONVID, record.datetime),
+  migration_id: ({record}) => moment(record.datetime).unix(),
   conversation: ({cache, record}) => cache('conversation', record.CONVID),
   receiver: ({cache, record}) => cache('user', record.RECEIVER),
   sender: ({cache, record}) => cache('user', record.SENDER),
