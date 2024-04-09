@@ -2,6 +2,7 @@ const mongoose = require('mongoose')
 const moment = require('moment')
 const lodash = require('lodash')
 const path = require('path')
+const levenshtein = require('fast-levenshtein')
 const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
 const { forceDataModelSmartdiet } = require('../utils')
 forceDataModelSmartdiet()
@@ -12,10 +13,10 @@ const Company = require('../../server/models/Company')
 require('../../server/models/Content')
 require('../../server/models/Comment')
 const Appointment=require('../../server/models/Appointment')
-const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED } = require('../../server/plugins/smartdiet/consts')
+const { ROLE_EXTERNAL_DIET, ROLE_CUSTOMER, GENDER_MALE, QUIZZ_TYPE_PROGRESS, DIET_REGISTRATION_STATUS_ACTIVE, COACHING_STATUS_NOT_STARTED, QUIZZ_TYPE_PATIENT } = require('../../server/plugins/smartdiet/consts')
 const bcrypt = require('bcryptjs')
 const Coaching = require('../../server/models/Coaching')
-const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages, importPatientWeight, fixFoodDocuments } = require('../../server/plugins/smartdiet/import')
+const { importDiets, importCoachings, importAppointments, importCompanies, importMeasures, fixFiles, importQuizz, importQuizzQuestions, importQuizzQuestionAnswer, importUserQuizz, importKeys, importProgressQuizz, importUserProgressQuizz, importOffers, importUserObjectives, importUserAssessmentId, importUserImpactId, importConversations, importMessages, updateImportedCoachingStatus, updateDietCompanies, importSpecs, importDietSpecs, importPatients, importPatientHeight, generateProgress, fixAppointments, importFoodDocuments, importUserFoodDocuments, importNutAdvices, importNetworks, importDietNetworks, importDiploma, importOtherDiploma, generateMessages, importPatientWeight, fixFoodDocuments, loadRecords } = require('../../server/plugins/smartdiet/import')
 const { getCacheKeys, displayCache, loadCache, saveCache } = require('../../utils/import')
 const Content = require('../../server/models/Content')
 const Measure = require('../../server/models/Measure')
@@ -293,6 +294,27 @@ describe('Test imports', () => {
   it('must upsert other diploma', async () => {
     let res = await importOtherDiploma(path.join(ROOT, 'smart_diets.csv'))
   })
+
+  it.only('Check quizzs', async () => {
+    const records=(await loadRecords(path.join(ROOT, 'smart_question.csv'))).map(q => q.question).sort()
+    // const questions=(await QuizzQuestion.find({migration_id: null}, {title:1})).map(q => q.title).sort()
+    const questions=fs.readFileSync('/tmp/prod').toString().split('\n')
+    records.forEach(r => {
+      const idx=questions.indexOf(r)
+      if (idx>=0) {
+        // console.log('Found', r)
+      }
+      else {
+        const nearest=lodash(questions).minBy(q => levenshtein.get(q, r))
+        const distance=levenshtein.get(r, nearest)
+        if (distance>15) {
+          console.error(`**** Not found\n${r}\n**** nearest is\n${nearest}\n**${distance}`)
+        }
+      }
+    })
+
+  })
+  
 
 })
 

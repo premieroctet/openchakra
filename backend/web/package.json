@@ -115,6 +115,7 @@
     "eslint-plugin-react": "^7.26.0",
     "eslint-plugin-react-hooks": "^4.4.0",
     "fakingoose": "^2.3.3",
+    "fast-levenshtein": "^3.0.0",
     "geolib": "^3.2.1",
     "is-webview": "^1.0.1",
     "jest": "^27.5.1",
