@@ -776,6 +776,11 @@ declareVirtualField({
       instance: 'ObjectID',
       options: { ref: 'nutritionAdvice' }
     },
+  }),
+  declareVirtualField({ model: m, field: 'spent_nutrition_credits', instance: 'Number', requires: 'email'})
+  declareVirtualField({
+    model: m, field: 'remaining_nutrition_credits', instance: 'Number',
+    requires: 'company.current_offer.nutrition_credit,spent_nutrition_credits,role'
   })
 })
 // End user/loggedUser
@@ -1099,12 +1104,6 @@ declareVirtualField({
 }
 )
 declareVirtualField({ model: 'coaching', field: 'spent_credits', instance: 'Number'})
-declareVirtualField({
-  model: 'coaching', field: 'remaining_nutrition_credits', instance: 'Number',
-  requires: 'user.offer.nutrition_credit,spent_nutrition_credits,user.company.offers.nutrition_credit,user.role'
-}
-)
-declareVirtualField({ model: 'coaching', field: 'spent_nutrition_credits', instance: 'Number'})
 declareEnumField({ model: 'coaching', field: 'status', enumValues: COACHING_STATUS})
 
 declareVirtualField({

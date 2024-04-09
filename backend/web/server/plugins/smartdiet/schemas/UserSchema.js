@@ -729,6 +729,22 @@ UserSchema.virtual("nutrition_advices", {
   foreignField: function() {return this.role==ROLE_EXTERNAL_DIET ?  "diet" : "patient_email"}, // is equal to foreignField
 })
 
+UserSchema.virtual('spent_nutrition_credits', {
+  ref: 'nutritionAdvice',
+  localField: 'email',
+  foreignField: 'patient_email',
+  count: true,
+})
+
+UserSchema.virtual('remaining_nutrition_credits', DUMMY_REF).get(function() {
+  if (this.role!=ROLE_CUSTOMER) {
+    return 0
+  }
+  return (this.company?.current_offer.nutrition_credit-this.spent_nutrition_credits) || 0
+})
+
+
+
 /* eslint-enable prefer-arrow-callback */
 
 module.exports = UserSchema

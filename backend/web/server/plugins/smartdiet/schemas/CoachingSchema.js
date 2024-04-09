@@ -258,20 +258,6 @@ CoachingSchema.virtual('appointment_type', DUMMY_REF).get(function() {
   return appType
 })
 
-CoachingSchema.virtual('spent_nutrition_credits', {
-  ref: 'nutritionAdvice',
-  localField: '_id',
-  foreignField: 'coaching',
-  count: true,
-})
-
-CoachingSchema.virtual('remaining_nutrition_credits', DUMMY_REF).get(function() {
-  if (this.user?.role!=ROLE_CUSTOMER) {
-    return 0
-  }
-  return (this.user?.offer?.nutrition_credit-this.spent_nutrition_credits) || 0
-})
-
 /* eslint-enable prefer-arrow-callback */
 
 
