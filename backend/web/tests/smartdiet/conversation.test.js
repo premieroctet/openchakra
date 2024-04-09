@@ -2,10 +2,15 @@ const lodash=require('lodash')
 const mongoose = require('mongoose')
 const {forceDataModelSmartdiet, buildAttributesException}=require('../utils')
 const Conversation = require('../../server/models/Conversation')
-const { MONGOOSE_OPTIONS } = require('../../server/utils/database')
+require('../../server/models/Job')
+require('../../server/models/DeclineReason')
+require('../../server/models/JoinReason')
+require('../../server/models/FoodDocument')
+const { MONGOOSE_OPTIONS, loadFromDb } = require('../../server/utils/database')
 const Message = require('../../server/models/Message')
 const { ROLE_EXTERNAL_DIET } = require('../../server/plugins/smartdiet/consts')
 const User = require('../../server/models/User')
+const { CREATED_AT_ATTRIBUTE } = require('../../utils/consts')
 
 forceDataModelSmartdiet()
 
@@ -51,7 +56,7 @@ describe('Conversation ', () => {
     })
   })
 
-  it.only('Should return latest messages', async()=> {
+  it('Should return latest messages', async()=> {
     const diet=await User.findOne(DIET_CRITERION)
     const conversations=await Conversation.find({users: diet._id}).populate(['messages', 'latest_messages'])
     conversations
@@ -60,6 +65,16 @@ describe('Conversation ', () => {
         console.log(conv._id)
         expect(conv.latest_messages).toHaveLength(1)
     })
+  })
+
+  it.only('Should return latest messages (2)', async()=> {
+    const CONVID="66102d3348a4d229cbb1164b"
+    const DIET_EMAIL='cyndiet.smartdiet@gmail.com'
+    const conversation=await Conversation.findById(CONVID).populate(['messages', 'latest_messages'])
+    expect(conversation.latest_messages[0]?.[CREATED_AT_ATTRIBUTE]).toBeTruthy()
+    const diet=await User.findOne({email: DIET_EMAIL})
+    const [conversation2 ]=await loadFromDb({model: 'conversation', id: CONVID, fields: ['latest_messages.creation_date'], user: diet})
+    console.log(conversation2)
   })
 
 })

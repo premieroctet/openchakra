@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const {schemaOptions} = require('../../../utils/schemas')
 const { idEqual } = require('../../../utils/database')
+const { CREATED_AT_ATTRIBUTE } = require('../../../../utils/consts')
 const Schema = mongoose.Schema
 
 const ConversationSchema = new Schema({
@@ -42,7 +43,7 @@ ConversationSchema.virtual('latest_messages', {
   localField: '_id',
   foreignField: 'conversation',
   options: { 
-    sort: { creation_date: -1 }, 
+    sort: { [CREATED_AT_ATTRIBUTE]: -1 }, 
     limit: 1,
   },
 })
