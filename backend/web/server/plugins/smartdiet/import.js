@@ -818,7 +818,7 @@ const updateDietCompanies = async () => {
     const appts=await Appointment.find({diet}).populate('user')
     const coachings=await Coaching.find({diet}).populate('user')
     const companies=lodash([...appts, ...coachings]).map(appt => appt.user.company._id).uniq()
-    await User.findByIdAndUpdate(diet, {customer_companies: companies.value()})
+    await User.findByIdAndUpdate(diet, {$addToSet: {customer_companies: companies.value()}})
   }))
 }
 
