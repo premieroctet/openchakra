@@ -812,12 +812,13 @@ const updateImportedCoachingStatus = async () => {
 }
 
 const updateDietCompanies = async () => {
-  const diets=await User.find({role: ROLE_EXTERNAL_DIET, 'customer_companies.0': {$exists: false}})
+  const diets=await User.find({role: ROLE_EXTERNAL_DIET, source: 'import'})
   console.log('Updating', diets.length, 'diets companies')
   const res=await runPromisesWithDelay(diets.map(diet => async () => {
     const appts=await Appointment.find({diet}).populate('user')
-    const companies=lodash(appts).map(appt => appt.user.company._id).uniq()
-    await User.findByIdAndUpdate(diet, {$addToSet: {customer_companies: companies.value()}})
+    const coachings=await Coaching.find({diet}).populate('user')
+    const companies=lodash([...appts, ...coachings]).map(appt => appt.user.company._id).uniq()
+    await User.findByIdAndUpdate(diet, {customer_companies: companies.value()})
   }))
 }
 
