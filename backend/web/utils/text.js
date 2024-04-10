@@ -3,6 +3,7 @@ const csv_string = require('csv-string')
 const stripBom = require('strip-bom')
 const moment=require('moment')
 const lodash=require('lodash')
+const levenshtein = require('fast-levenshtein')
 
 const ARTICLES = 'le la les un une de des d l à'.split(/ /g)
 const SIREN_LENGTH=9
@@ -214,6 +215,20 @@ const formatHour = datetime => {
   return moment(datetime).format(`HH:mm`)
 }
 
+const getWordsDistance = (word1, word2) => {
+  return levenshtein.get(word1, word2)
+}
+
+const getNearestWord = (word, words, limit=undefined) => {
+  const nearest=lodash(words).minBy(w => getWordsDistance(word, w))
+  const distance=getWordsDistance(word, nearest)
+  if (distance>limit) {
+    console.error(`****** Too far\n${word}\n**** from\n${nearest}\n*** distance ${distance}`)
+    return null
+  }
+  return nearest
+}
+
 module.exports = {
   normalize,
   matches,
@@ -238,4 +253,5 @@ module.exports = {
   formatDeadline,
   splitRemaining,
   formatDateTime, formatDate, formatHour,
+  getWordsDistance, getNearestWord,
 }
