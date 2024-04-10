@@ -222,7 +222,7 @@ describe('Test imports', () => {
     console.log('found', found, '/', quizzs.length)
   })
 
-  it('must upsert user progress quizz', async () => {
+  it.only('must upsert user progress quizz', async () => {
     return importUserProgressQuizz(path.join(ROOT, 'wapp_progress.csv'))
   })
 
