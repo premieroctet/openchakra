@@ -5,7 +5,7 @@ const moment=require('moment')
 const path=require('path')
 const crypto = require('crypto')
 const {extractData, guessFileType, importData, cache, setCache}=require('../../../utils/import')
-const { guessDelimiter, normalize } = require('../../../utils/text')
+const { guessDelimiter, normalize, getNearestWord } = require('../../../utils/text')
 const Company=require('../../models/Company')
 const User=require('../../models/User')
 const AppointmentType=require('../../models/AppointmentType')
@@ -39,8 +39,7 @@ require('../../models/Offer')
 const { updateCoachingStatus } = require('./coaching')
 const { isPhoneOk } = require('../../../utils/sms')
 const UserQuizzQuestion = require('../../models/UserQuizzQuestion')
-const mime = require('mime-types')
-const { sendFilesToAWS, sendFileToAWS } = require('../../middlewares/aws')
+const { sendFileToAWS } = require('../../middlewares/aws')
 const UserQuizz = require('../../models/UserQuizz')
 const { isNewerThan } = require('../../utils/filesystem')
 const pairing =require('@progstream/cantor-pairing')
@@ -54,8 +53,6 @@ const ASS_PRESTATION_SMARTAGENDA_ID=-1
 const FOLLOWUP_PRESTATION_DURATION=15
 const FOLLOWUP_PRESTATION_NAME=`Suivi générique ${FOLLOWUP_PRESTATION_DURATION} minutes`
 const FOLLOWUP_PRESTATION_SMARTAGENDA_ID=-2
-
-const KEY_NAME='Clé import'
 
 const QUIZZ_FACTOR=100
 
@@ -144,7 +141,7 @@ const fixAppointments = async directory => {
   const INPUT=path.join(directory, 'smart_consultation.csv')
   const MIS_INPUT=path.join(directory, 'smart_mis.csv')
   const EO_INPUT=path.join(directory, 'smart_eo.csv')
-  const OUTPUT=path.join(directory, 'consultation.csv')
+  const OUTPUT=path.join(directory, 'wapp_consultation.csv')
   const REPLACES=[
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
@@ -202,6 +199,24 @@ const fixQuizzQuestions = directory => {
     [/\\"/g, "'"], [/\\\\/g, ''],
   ]
   replaceInFile(path.join(directory, 'smart_question.csv'), REPLACES)
+}
+
+const fixPatientQuizz = async directory => {
+  const input=path.join(directory, 'smart_patient_quiz.csv')
+  const output=path.join(directory, 'wapp_patient_quiz.csv')
+  const records=await loadRecords(input)
+
+  const invert = value => lodash.isEmpty(value) ? '' : +value==1 ? 0 : 1
+
+  const mappedRecords=records.map(r => {
+    const copy={...r}
+    ORDERS.map(attribute => {
+      copy[attribute]=invert(copy[attribute])
+    })
+    return copy
+  })
+
+  await saveRecords(output, Object.keys(mappedRecords[0]), mappedRecords)
 }
 
 const fixObjectives = directory => {
@@ -379,6 +394,49 @@ const fixFoodDocuments = async directory => {
   }
 }
 
+const computeQuestionId = (quizz_id, question_order) => {
+  return parseInt(+quizz_id)*QUIZZ_FACTOR+(+question_order)
+}
+
+const computeAnswerId = (quizz_id, question_order, answer_order) => {
+  return computeQuestionId(quizz_id, question_order)*QUIZZ_FACTOR+(+answer_order)
+}
+
+const generateQuizz = async directory => {
+  const quizz=await loadRecords(path.join(directory, 'smart_quiz.csv'))
+  const questions=await loadRecords(path.join(directory, 'smart_question.csv'))
+  
+  // Mapp quizz names
+  const dbQuizz=await Quizz.find({type: QUIZZ_TYPE_PATIENT}, {name:1}).populate('questions')
+  const mappedQuizzs=quizz.map(q => ({
+      ...q,
+      name: getNearestWord(q.name, dbQuizz.map(d => d.name), 15) || q.name
+    }))
+  await saveRecords(path.join(directory, 'wapp_quiz.csv'), Object.keys(mappedQuizzs[0]), mappedQuizzs)
+
+  // Mapp quizz question titles
+  const dbQuestions=lodash(dbQuizz).map(q => q.questions).flatten()
+  const mappedQuestions=questions.map(q => ({
+      SDQUESTIONID: computeQuestionId(q.SDQUIZID, q.position), 
+      SQQUIZID: q.SDQUIZID,
+      question: getNearestWord(q.question, dbQuestions.map(d => d.title), 6) || q.question,
+      correct_answer: computeAnswerId(q.SDQUIZID, q.position, +q.firstanswergood==1 ? 0 : 1),
+      comments: `"${q.comments}"`,
+    })
+  )
+  await saveRecords(path.join(directory, 'wapp_questions.csv'), Object.keys(mappedQuestions[0]), mappedQuestions)
+
+  const mappedAnswers=lodash(questions)
+    .map(q => ([
+      {SDANSWERID: computeAnswerId(q.SDQUIZID, q.position, 0), SDQUESTIONID: computeQuestionId(q.SDQUIZID, q.position),text: q.firstanswer},
+      {SDANSWERID: computeAnswerId(q.SDQUIZID, q.position, 1), SDQUESTIONID: computeQuestionId(q.SDQUIZID, q.position),text: q.secondanswer},
+    ]))
+    .flatten()
+    .value()
+  await saveRecords(path.join(directory, 'wapp_answers.csv'), Object.keys(mappedAnswers[0]), mappedAnswers)
+  
+}
+
 const fixFiles = async directory => {
   console.log('Fixing files')
   await fixPatients(directory)
@@ -386,13 +444,16 @@ const fixFiles = async directory => {
   await fixAppointments(directory)
   await fixQuizz(directory)
   await fixQuizzQuestions(directory)
+  await fixPatientQuizz(directory)
   await fixObjectives(directory)
   await fixMessages(directory)
   await fixSummary(directory)
   await generateMessages(directory)
   await fixSpecs(directory)
   await generateProgress(directory)
-  await fixFoodDocuments(directory)
+  // Moved in import function
+  //await fixFoodDocuments(directory)
+  await generateQuizz(directory)
   console.log('Fixed files')
 }
 
@@ -603,48 +664,21 @@ const QUIZZ_MAPPING={
 const QUIZZ_KEY='name'
 const QUIZZ_MIGRATION_KEY='migration_id'
 
-const QUIZZQUESTION_MAPPING={
-  migration_id: ({record}) => parseInt(record.SDQUIZID)*QUIZZ_FACTOR+parseInt(record.position),
-  title: ({record}) => record.question.replace(/[\r\n\\]/g, ''),
-  success_message: ({record}) => `Bravo! ${record.comments}`,
-  error_message: ({record}) => `Dommage! ${record.comments}`,
-  type: () => QUIZZ_QUESTION_TYPE_ENUM_SINGLE,
-}
-
-const QUIZZQUESTION_KEY='title'
-const QUIZZQUESTION_MIGRATION_KEY='migration_id'
-
-const QUIZZANSWER_1_MAPPING={
-  migration_id: ({record}) => (parseInt(record.SDQUIZID)*QUIZZ_FACTOR+parseInt(record.position))*QUIZZ_FACTOR+1,
-  quizzQuestion: ({record, cache}) => {
-    const question_migration_id=parseInt(record.SDQUIZID)*QUIZZ_FACTOR+parseInt(record.position)
-    return cache('quizzQuestion', question_migration_id)
-  },
-  text: 'firstanswer',
-}
-
-const QUIZZANSWER_1_KEY=['text', 'quizzQuestion']
-const QUIZZANSWER_1_MIGRATION_KEY='migration_id'
-
-const QUIZZANSWER_2_MAPPING={
-  migration_id: ({record}) => (parseInt(record.SDQUIZID)*QUIZZ_FACTOR+parseInt(record.position))*QUIZZ_FACTOR+1,
-  quizzQuestion: ({record, cache}) => {
-    const question_migration_id=parseInt(record.SDQUIZID)*QUIZZ_FACTOR+parseInt(record.position)
-    return cache('quizzQuestion', question_migration_id)
-  },
-  text: 'secondanswer',
-}
-
-const QUIZZANSWER_2_KEY=['text', 'quizzQuestion']
-const QUIZZANSWER_2_MIGRATION_KEY='migration_id'
-
-
+const hashCache = new NodeCache()
 const hashStringToDecimal = inputString => {
-  const hash = crypto.createHash('sha256')
-  hash.update(inputString)
-  const hashedString = hash.digest('hex')
-  const decimalNumber = BigInt('0x' + hashedString)
-  const res=parseInt(decimalNumber%BigInt(1000000000))
+  let res=hashCache.get(inputString)
+  if (!res) {
+    console.error('Not found', inputString)
+    const hash = crypto.createHash('sha256')
+    hash.update(inputString)
+    const hashedString = hash.digest('hex')
+    const decimalNumber = BigInt('0x' + hashedString)
+    res=parseInt(decimalNumber%BigInt(1000000000))
+    hashCache.set(inputString, res)
+  }
+  else {
+    console.log('Found', inputString)
+  }
   return res
 }
 
@@ -931,42 +965,76 @@ const importQuizz = async input_file => {
       identityKey: QUIZZ_KEY, migrationKey: QUIZZ_MIGRATION_KEY, progressCb: progressCb()}))
 }
   
+const QUIZZQUESTION_MAPPING={
+  migration_id: 'SDQUESTIONID',
+  title: ({record}) => record.question,
+  success_message: ({record}) => `Bravo! ${record.comments}`,
+  error_message: ({record}) => `Dommage! ${record.comments}`,
+  type: () => QUIZZ_QUESTION_TYPE_ENUM_SINGLE,
+}
+
+const QUIZZQUESTION_KEY='title'
+const QUIZZQUESTION_MIGRATION_KEY='migration_id'
+
+const QUIZZQUESTIONORDER_MAPPING={
+  migration_id: 'SDQUIZZID',
+  questions: ({record, cache}) => record.QUESTIONS.map(id => cache('quizzQuestion', id)),
+}
+
+const QUIZZQUESTIONORDER_KEY='migration_id'
+const QUIZZQUESTIONORDER_MIGRATION_KEY='migration_id'
+
 const importQuizzQuestions = async input_file => {
   return loadRecords(input_file)
     .then(records => importData({model: 'quizzQuestion', data:records, mapping:QUIZZQUESTION_MAPPING, 
-    identityKey: QUIZZQUESTION_KEY, migrationKey: QUIZZQUESTION_MIGRATION_KEY, progressCb: progressCb()})
+      identityKey: QUIZZQUESTION_KEY, migrationKey: QUIZZQUESTION_MIGRATION_KEY, progressCb: progressCb()})
+      .then(() => records)
   )
-  // Attach questions to quizzs
-  .then(res=> QuizzQuestion.find({migration_id: {$ne: null}})
-    .then(questions => lodash(questions)
-      .groupBy(q => Math.floor(q.migration_id/QUIZZ_FACTOR))
-      .mapValues(quizzQuestions => quizzQuestions.map(q => q._id))
-      .value()
-    )
-    .then(grouped => Object.keys(grouped).map(key => Quizz.findOneAndUpdate({migration_id: key}, {questions: grouped[key]})))
-    .then(queries => Promise.all(queries))
-    .then(() => res)
-  )
+  // Attach questions to quizz
+  .then(records => {
+    const quizzQuestions=lodash(records).groupBy('SQQUIZID')
+      .mapValues(questions => lodash.map(questions, q => +q.SDQUESTIONID).sort())
+      .entries().map(([quizzId, questionIds])=> ({SDQUIZZID: quizzId, QUESTIONS: questionIds}))
+    return importData({model: 'quizz', data: quizzQuestions, mapping: QUIZZQUESTIONORDER_MAPPING,
+      identityKey: QUIZZQUESTIONORDER_KEY, migrationKey: QUIZZQUESTIONORDER_MIGRATION_KEY, progressCb: progressCb()})
+      .then(() => records)
+  })
 }
 
-const importQuizzQuestionAnswer = async input_file => {
-  const contents=fs.readFileSync(input_file)
-  return Promise.all([guessFileType(contents), guessDelimiter(contents)])
-    .then(([format, delimiter]) => extractData(contents, {format, delimiter}))
-    .then(({records}) => 
-      Promise.all([
-        importData({model: 'item', data:records, mapping:QUIZZANSWER_1_MAPPING, 
-          identityKey: QUIZZANSWER_1_KEY, migrationKey: QUIZZANSWER_1_MIGRATION_KEY, progressCb: progressCb()}),
-        importData({model: 'item', data:records, mapping:QUIZZANSWER_2_MAPPING, 
-          identityKey: QUIZZANSWER_2_KEY, migrationKey: QUIZZANSWER_2_MIGRATION_KEY, progressCb: progressCb()}),
-      ])
+const QUIZZANSWER_MAPPING={
+  migration_id: 'SDANSWERID',
+  quizzQuestion: ({record, cache}) => cache('quizzQuestion', record.SDQUESTIONID),
+  text: 'text',
+}
+
+const QUIZZANSWER_KEY=['text', 'quizzQuestion']
+const QUIZZANSWER_MIGRATION_KEY='migration_id'
+
+const QUIZZQUESTIONANSWER_MAPPING={
+  migration_id: 'SDQUESTIONID',
+  correct_answer: ({record, cache}) => cache('item', +record.correct_answer),
+}
+
+const QUIZZQUESTIONANSWER_KEY='migration_id'
+const QUIZZQUESTIONANSWER_MIGRATION_KEY='migration_id'
+
+
+const importQuizzQuestionAnswer = async (answers_file, questions_file) => {
+  return loadRecords(answers_file)
+    .then(records => importData({model: 'item', data:records, mapping:QUIZZANSWER_MAPPING, 
+          identityKey: QUIZZANSWER_KEY, migrationKey: QUIZZANSWER_MIGRATION_KEY, progressCb: progressCb()}),
     )
-    .then(([res1, res2]) => [...res1, ...res2])
+    .then(() => loadRecords(questions_file))
+    .then(records => importData({model: 'quizzQuestion', data:records, mapping:QUIZZQUESTIONANSWER_MAPPING,
+        identityKey: QUIZZQUESTIONANSWER_KEY, migrationKey: QUIZZQUESTIONANSWER_MIGRATION_KEY, progressCb: progressCb()})
+          .then(console.log)
+)
 }
 
 const ORDERS=['FIRST', 'SECOND', 'third', 'fourth', 'fifth', 'sixth', 'seventh', 'eighth', 'ninth', 'tenth']
 
 const importUserQuizz = async input_file => {
+  await Coaching.updateMany({migration_id: {$ne: null}}, {quizz_templates: [], quizz: []}).then(console.log)
   return loadRecords(input_file)
     .then(records => runPromisesWithDelay(records.map((record, idx) => async() => {
       const log=idx%500 ? () => {} : console.log
@@ -980,23 +1048,24 @@ const importUserQuizz = async input_file => {
         return Promise.reject(`No coaching for user ${record.SDPATIENTID}/${userId}`)
       }
       // Check if template exists
-      const hasTemplate=coaching.quizz_templates.some(q => idEqual(q._id, quizzId))
+      const hasTemplate=coaching.quizz_templates.find(q => idEqual(q._id, quizzId))
       if (!hasTemplate) {
         coaching.quizz_templates.push(quizzId)
         const quizz=await Quizz.findById(quizzId).populate({path: 'questions', populate: 'available_answers'})
         const cloned=await quizz.cloneAsUserQuizz()
+        cloned[CREATED_AT_ATTRIBUTE]=moment(record.obtentiondate)
+        await cloned.save()
         coaching.quizz.push(cloned._id)
         await coaching.save()
         return Promise.all(ORDERS.map(async (attribute, index) => {
           const answer=parseInt(record[attribute])
           const quizzQuestion=quizz.questions[index]
           const userQuestion=cloned.questions[index]
-          // console.log(index, 'quizz question before', quizzQuestion)
           if (!!quizzQuestion && !lodash.isNaN(answer)) {
-            const item_id=quizzQuestion.available_answers[answer]
+            const answerMigrationId=computeAnswerId(record.SDQUIZID, index+1, +answer)
+            const item_id=quizzQuestion.available_answers.find(answ => answ.migration_id==answerMigrationId)
             userQuestion.single_enum_answer=item_id._id
-            console.log('saving')
-            return userQuestion.save().then(console.log).catch(err => console.error('err', err))
+            return userQuestion.save()
           }
           else {
             return true
@@ -1350,5 +1419,6 @@ module.exports={
   importOtherDiploma,
   generateMessages,
   fixFoodDocuments,
+  generateQuizz,
 }
 
