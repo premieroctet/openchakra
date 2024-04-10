@@ -20,7 +20,7 @@ const MeasureSchema = new Schema({
   user: {
     type: Schema.Types.ObjectId,
     ref: 'user',
-    required: [true, "L'utilisateur est obligatoire"],
+    required: [true, `Le patient est obligatoire`],
   },
   date: {
     type: Date,

@@ -129,7 +129,7 @@ const UserSchema = new Schema({
   gender: {
     type: String,
     enum: Object.keys(GENDER),
-    validate : v => v || undefined,
+    set : v => v || undefined,
     required: false,
   },
   objective_targets: [{
@@ -740,7 +740,7 @@ UserSchema.virtual('remaining_nutrition_credits', DUMMY_REF).get(function() {
   if (this.role!=ROLE_CUSTOMER) {
     return 0
   }
-  return (this.company?.current_offer.nutrition_credit-this.spent_nutrition_credits) || 0
+  return (this.company?.current_offer?.nutrition_credit-this.spent_nutrition_credits) || 0
 })
 
 
