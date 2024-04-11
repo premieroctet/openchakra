@@ -26,7 +26,8 @@ const {
   idEqual,
   setIntersects,
   shareTargets,
-  DUMMY_REF
+  DUMMY_REF,
+  getYearFilter
 } = require('../../../utils/database')
 const mongoose = require('mongoose')
 const moment=require('moment')
@@ -733,6 +734,13 @@ UserSchema.virtual('spent_nutrition_credits', {
   ref: 'nutritionAdvice',
   localField: 'email',
   foreignField: 'patient_email',
+  options: {
+    match: () => {
+      const f=getYearFilter({attribute: 'start_date', year: moment()})
+      console.log(JSON.stringify(f))
+      return f;
+    },
+  },
   count: true,
 })
 
