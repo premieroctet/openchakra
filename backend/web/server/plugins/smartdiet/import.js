@@ -462,12 +462,14 @@ const computePseudo = record => {
   return letters.join('').toUpperCase() || 'FAK'
 }
 
-const COMPANY_MAPPING= {
+const COMPANY_MAPPING= (assTypeId, followTypeId) => ({
   name: 'name',
   size: () => 1,
   activity: () => COMPANY_ACTIVITY_OTHER,
+  assessment_appointment_type: () => assTypeId,
+  followup_appointment_type: () => followTypeId,
   migration_id: 'SDPROJECTID',
-}
+})
 
 const COMPANY_KEY='name'
 const COMPANY_MIGRATION_KEY='migration_id'
@@ -857,9 +859,23 @@ const updateDietCompanies = async () => {
 }
 
 const importCompanies = async input_file => {
+  // Usert default assessment & followup assesment type
+  await AppointmentType.updateOne(
+    {title: ASS_PRESTATION_NAME},
+    {title: ASS_PRESTATION_NAME, duration: ASS_PRESTATION_DURATION, smartagenda_id: ASS_PRESTATION_SMARTAGENDA_ID},
+    {upsert: true}
+  )
+  await AppointmentType.updateOne(
+    {title: FOLLOWUP_PRESTATION_NAME},
+    {title: FOLLOWUP_PRESTATION_NAME, duration: FOLLOWUP_PRESTATION_DURATION, smartagenda_id: FOLLOWUP_PRESTATION_SMARTAGENDA_ID},
+    {upsert: true}
+  )
+  const assAppType=await AppointmentType.findOne({title: ASS_PRESTATION_NAME})
+  const followAppType=await AppointmentType.findOne({title: FOLLOWUP_PRESTATION_NAME})
+  const mapping=COMPANY_MAPPING(assAppType._id, followAppType._id)
   return loadRecords(input_file)
     .then(records => 
-      importData({model: 'company', data:records, mapping:COMPANY_MAPPING, identityKey: COMPANY_KEY, 
+      importData({model: 'company', data:records, mapping, identityKey: COMPANY_KEY, 
         migrationKey: COMPANY_MIGRATION_KEY, progressCb: progressCb()}))
 }
 
