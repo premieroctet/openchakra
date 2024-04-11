@@ -376,7 +376,7 @@ const fixFoodDocuments = async directory => {
   ]
   replaceInFile(path.join(directory, 'smart_fiche.csv'), REPLACES)
   const fichesRecords=await loadRecords(path.join(directory, 'smart_fiche.csv'))
-  const mappingRecords=await loadRecords(path.join(directory, 'wapp_fiche_mapping.csv'))
+  const mappingRecords=await loadRecords(path.join(directory, 'mapping_fiche.csv'))
   const getMappingName = originalName => {
     const mappingName=mappingRecords.find(record => record.smart_name==originalName)?.wapp_name
     return mappingName

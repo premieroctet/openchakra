@@ -258,7 +258,7 @@ describe('Test imports', () => {
     await fixFoodDocuments(ROOT)
     return importFoodDocuments(
       path.join(ROOT, 'smart_fiche.csv'), 
-      path.join(ROOT, 'wapp_fiche_mapping.csv'),
+      path.join(ROOT, 'mapping_fiche.csv'),
       path.join(ROOT, 'fiches')
     )
   })
