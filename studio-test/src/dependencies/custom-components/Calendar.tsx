@@ -1,4 +1,5 @@
 import React, {useState, useMemo} from 'react'
+import lodash from 'lodash'
 import { extendTheme } from '@chakra-ui/react'
 import { ChakraProvider } from '@chakra-ui/react'
 import {
@@ -15,13 +16,12 @@ import {
 } from '@uselessdev/datepicker'
 
 const WCalendar = props => {
+  const value = lodash.get(props.dataSource, props.attribute)
 
-  const [date, setDate] = React.useState()
+  const [date, setDate] = useState(value || undefined)
 
   const handleSelectDate = selected => {
     setDate(selected)
-    props.setComponentValue && props.setComponentValue(props.id, selected)
-    props.onClick && props.onClick()
   }
 
   const theme = useMemo(() => extendTheme(CalendarDefaultTheme, {
@@ -50,10 +50,9 @@ const WCalendar = props => {
   }), [props.borderRadius, props.backgroundColor])
   
   return (
-    <ChakraProvider {...props} theme={theme} data-value={date}>
-      <pre>{JSON.stringify(props.getComponentValue?.(props.id), null, 2)}</pre>
+    <ChakraProvider theme={theme} data-value={date}>
+      <div {...props} value={date} >
       <Calendar 
-        {...props}
         value={{start: date}} 
         onSelectDate={handleSelectDate}
         singleDateSelection        
@@ -72,6 +71,7 @@ const WCalendar = props => {
           </CalendarMonth>
         </CalendarMonths>
       </Calendar>
+      </div>
     </ChakraProvider>
   )
 }

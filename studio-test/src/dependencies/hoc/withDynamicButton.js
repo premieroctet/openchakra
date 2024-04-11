@@ -32,7 +32,9 @@ const withDynamicButton = Component => {
     const nextActionProps = props.nextActionProps
       ? JSON.parse(props.nextActionProps)
       : {}
-    let onClick = props.onClick
+    // Remove default value for Calendar
+    // let onClick = props.onClick ? lodash.debounce(props.onClick, 2000) : null
+    let onClick=() => {}
 
     const [actionAllowed, setActionAllowed]=useState(true)
 
@@ -115,7 +117,7 @@ const withDynamicButton = Component => {
       <>
       <Component disabled={!actionAllowed}
         {...props}
-        onClick={onClick}
+        onClick={lodash.debounce(onClick, 200)} //For Calendar, ensure value had time to update
         {...conditionalProperties}
         isLoading={insideAction}
       />
