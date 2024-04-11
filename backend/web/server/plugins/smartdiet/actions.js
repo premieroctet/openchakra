@@ -1,4 +1,5 @@
 const axios = require('axios')
+const crypto=require('crypto')
 const { sendForgotPassword, sendNewMessage } = require('./mailing')
 const {
   DAYS_BEFORE_IND_CHALL_ANSWER,
@@ -298,24 +299,24 @@ addAction('smartdiet_rabbit_appointment', setRabbitAppointment)
 const downloadSmartdietDocument = ({type, patientId, documentId}) => {
 
   const config=getSmartdietAPIConfig()
-  console.log('API config', config)
-  const encodedCredentials = Buffer.from(`${config.login}:${config.password}`).toString('base64')
   const url = 'https://pro.smartdiet.fr/ws/patient-summary'
+  const timestamp=moment().unix()
+  const hashStr=`${documentId}${timestamp}${config.login}:${config.password}`
+  const hash=crypto.createHash('md5').update(hashStr).digest('hex')
 
   const postData = {
     resourceType: type,
     patientId: patientId, 
-    summaryId: documentId
+    summaryId: documentId,
+    timestamp,
+    hash
   };
 
-  console.log('url', url, 'post data',postData, 'auth', `Basic ${encodedCredentials}`)
+  const headers={'Content-Type': 'application/json'}
 
-  return axios.post(url, postData, {
-    headers: {
-      'Authorization': `Basic ${encodedCredentials}`,
-      'Content-Type': 'application/json',
-    }
-  })
+  console.log('url', url, 'post data',postData, 'timestamp', timestamp, 'hash str', hashStr, 'hash', hash)
+
+  return axios.post(url, postData, {headers})
   .then(({data}) => Buffer.from(data, 'base64'))
 }
 
