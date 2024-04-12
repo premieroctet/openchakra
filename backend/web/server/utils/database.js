@@ -419,6 +419,7 @@ const buildQuery = (model, id, fields, params) => {
 
   let criterion = id ? {_id: id} : {}
   const filters=extractFilters(params)
+  console.log('filters are', filters, 'params', params)
   const limits=extractLimits(params)
   const sorts=extractSorts(params)
 
@@ -1021,10 +1022,11 @@ const checkIntegrity = () => {
 const getDateFilter = ({attribute, day}) => {
   const start=moment(day).startOf('day')
   const end=moment(day).endOf('day')
-  return {$and: [
-    {[attribute]: {$gt: start}}, 
-    {[attribute]: {$lt: end}}
-  ]}
+  // return {$and: [
+  //   {[attribute]: {$gt: start}}, 
+  //   {[attribute]: {$lt: end}}
+  // ]}
+  return {[attribute]: {$gt: start, $lt: end}}
 }
 
 // Creates a date filter to match any moment in the month

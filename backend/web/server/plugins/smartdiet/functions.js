@@ -182,6 +182,7 @@ const { computeBilling } = require('./billing')
 const { isPhoneOk, PHONE_REGEX } = require('../../../utils/sms')
 const { updateCoachingStatus } = require('./coaching')
 const { tokenize } = require('protobufjs')
+const LogbookDay = require('../../models/LogbookDay')
 
 const filterDataUser = ({ model, data, id, user }) => {
   if (model == 'offer' && !id) {
@@ -209,7 +210,7 @@ const filterDataUser = ({ model, data, id, user }) => {
 
 setFilterDataUser(filterDataUser)
 
-const preprocessGet = ({ model, fields, id, user, params }) => {
+const preprocessGet = async ({ model, fields, id, user, params }) => {
   // TODO Totally ugly. When asked for chartPoint, the studio should also require 'date' attribute => to fix in the studio
   const chartPointField=fields.find(v => /value_1/.test(v))
   if (chartPointField) {
@@ -292,6 +293,19 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
     model='user'
   }
 
+  if (model=='logbookDay') {
+    // Get by date
+    const coachingLogbbokFields=[...fields.map(f => f.replace(/logbooks/, 'logbook')), 'day']
+    const m=moment.unix(id)
+    if (!!id && m.isValid()) {
+      const filter=getDateFilter('day', m)
+      let coachingLogbooks=await loadFromDb({model: 'coachingLogbook', fields: coachingLogbbokFields, id: undefined, user, params})
+      coachingLogbooks=coachingLogbooks.filter(l => moment(l.day).isSame(m, 'day'))
+      const logbookDay={day: moment.unix(id), logbooks: coachingLogbooks.map(c => c.logbook)}
+      return {data: [logbookDay]}
+   }
+  }
+
   return Promise.resolve({ model, fields, id, params })
 
 }
@@ -299,7 +313,7 @@ const preprocessGet = ({ model, fields, id, user, params }) => {
 setPreprocessGet(preprocessGet)
 
 const preCreate = async ({ model, params, user }) => {
-  if (model=='coachingLogbook') {
+  if (model=='logbookDay') {
     return logbooksConsistency(user._id, params.day)
       .then(() => ({data: {_id: moment(params.day).unix()}}))
   }
@@ -1899,7 +1913,7 @@ ensureSpoonGains()
 
 // Ensure logbooks consistency each morning
 //cron.schedule('0 */15 * * * *', async() => {
-cron.schedule('0 0 * * * *', async () => {
+false && cron.schedule('0 0 * * * *', async () => {
   logbooksConsistency()
     .then(() => console.log(`Logbooks consistency OK `))
     .catch(err => console.error(`Logbooks consistency error:${err}`))
