@@ -22,6 +22,7 @@ const WCalendar = props => {
 
   const handleSelectDate = selected => {
     setDate(selected)
+    props.onClick && props.onClick()
   }
 
   const theme = useMemo(() => extendTheme(CalendarDefaultTheme, {
@@ -51,7 +52,7 @@ const WCalendar = props => {
   
   return (
     <ChakraProvider theme={theme} data-value={date}>
-      <div {...props} value={date} >
+      <div {...props} onClick={undefined} value={date} >
       <Calendar 
         value={{start: date}} 
         onSelectDate={handleSelectDate}
