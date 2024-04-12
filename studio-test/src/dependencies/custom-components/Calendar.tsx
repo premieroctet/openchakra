@@ -50,10 +50,22 @@ const WCalendar = props => {
     },
   }), [props.borderRadius, props.backgroundColor])
   
+  const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
+  const DAYS='Dim Lun Mar Mer Jeu Ven Sam'.split(' ')
   return (
     <ChakraProvider theme={theme} data-value={date}>
       <div {...props} onClick={undefined} value={date} >
       <Calendar 
+        locale={{
+          localize: {
+            day: d => DAYS[d],
+            month: m => MONTHS[m],
+          },
+          options: {
+            weekStartsOn: 1
+          }
+        }}
+        
         value={{start: date}} 
         onSelectDate={handleSelectDate}
         singleDateSelection        
