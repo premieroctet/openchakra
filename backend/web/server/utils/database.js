@@ -419,7 +419,6 @@ const buildQuery = (model, id, fields, params) => {
 
   let criterion = id ? {_id: id} : {}
   const filters=extractFilters(params)
-  console.log('filters are', filters, 'params', params)
   const limits=extractLimits(params)
   const sorts=extractSorts(params)
 
@@ -438,7 +437,6 @@ const buildQuery = (model, id, fields, params) => {
   }
   const currentLimit=getCurrentLimit(limits)
   if (currentLimit) {
-    console.log('Setting limit', currentLimit, 'skipping', (params.page || 0)*currentLimit)
     query=query.skip((params.page || 0)*currentLimit)
     query=query.limit(currentLimit+1)
   }
