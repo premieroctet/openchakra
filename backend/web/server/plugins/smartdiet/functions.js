@@ -298,8 +298,11 @@ const preprocessGet = async ({ model, fields, id, user, params }) => {
     const coachingLogbbokFields=[...fields.map(f => f.replace(/logbooks/, 'logbook')), 'day']
     const m=moment.unix(id)
     if (!!id && m.isValid()) {
-      const filter=getDateFilter('day', m)
-      let coachingLogbooks=await loadFromDb({model: 'coachingLogbook', fields: coachingLogbbokFields, id: undefined, user, params})
+      params=lodash.mapKeys(params, (v, k) => k.replace(/logbooks/, 'logbook'))
+      params={...params, 'filter.user': user._id}
+      let coachingLogbooks=await loadFromDb({
+        model: 'coachingLogbook', fields: coachingLogbbokFields, id: undefined, user, params
+      })
       coachingLogbooks=coachingLogbooks.filter(l => moment(l.day).isSame(m, 'day'))
       const logbookDay={day: moment.unix(id), logbooks: coachingLogbooks.map(c => c.logbook)}
       return {data: [logbookDay]}

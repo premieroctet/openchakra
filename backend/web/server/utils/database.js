@@ -1022,11 +1022,10 @@ const checkIntegrity = () => {
 const getDateFilter = ({attribute, day}) => {
   const start=moment(day).startOf('day')
   const end=moment(day).endOf('day')
-  // return {$and: [
-  //   {[attribute]: {$gt: start}}, 
-  //   {[attribute]: {$lt: end}}
-  // ]}
-  return {[attribute]: {$gt: start, $lt: end}}
+  return {$and: [
+    {[attribute]: {$gt: start}}, 
+    {[attribute]: {$lt: end}}
+  ]}
 }
 
 // Creates a date filter to match any moment in the month
