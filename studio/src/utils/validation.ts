@@ -35,7 +35,6 @@ const checkActionsProperties = (
   comp: IComponent,
   icomponents: IComponents,
 ) => {
-  console.trace('Checking action property')
   const actionAtts=['action', 'nextAction']
   actionAtts.forEach(actionAtt => {
     if (comp.props[actionAtt]) {

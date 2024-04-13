@@ -18,7 +18,6 @@ import {
 let allLocales;
 import("date-fns/locale").then(locales => {
   allLocales = locales;
-  console.log(Object.keys(allLocales))
 });
 
 const getLocale = () => {
