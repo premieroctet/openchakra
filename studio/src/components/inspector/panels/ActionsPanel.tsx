@@ -17,6 +17,7 @@ import {
 import { useForm } from '../../../hooks/useForm'
 import FormControl from '../controls/FormControl'
 import usePropsSelector from '../../../hooks/usePropsSelector'
+import SwitchControl from '../controls/SwitchControl'
 
 const ActionPanel = ({
   id,
@@ -146,14 +147,15 @@ const ActionsPanel: React.FC = () => {
   return (
     <Accordion>
       <AccordionContainer title="Actions">
-        <FormControl htmlFor="hideIfForbidden" label='Hide if action is forbidden'>
-          <Checkbox
-            id="hideIfForbidden"
-            name="hideIfForbidden"
-            isChecked={hideIfForbidden}
-            onChange={onHideChange}
-          ></Checkbox>
-        </FormControl>
+        <SwitchControl
+          name='hideIfForbidden'
+          label='Hide if forbidden'
+        />
+        <SwitchControl
+          name='confirmationmessage'
+          label='Show confirmation'
+        />
+
         <ActionPanel
           id="action"
           actionLabel="Action"

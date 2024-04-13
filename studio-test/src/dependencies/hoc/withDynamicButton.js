@@ -64,7 +64,7 @@ const withDynamicButton = Component => {
           fireClear: props.fireClear,
         })
           .then(res => {
-            if (MESSAGES[action]) {
+            if (props.confirmationmessage && MESSAGES[action]) {
               setInfoMessage(MESSAGES[action])
             }
             if (!nextAction) {
