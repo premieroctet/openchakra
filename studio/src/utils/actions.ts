@@ -117,6 +117,7 @@ export const ACTIONS: IActions = {
         { key: false, label: 'In same page' },
       ],
     },
+    required:['page']
   },
   levelUp: {
     label: 'Move item up',
