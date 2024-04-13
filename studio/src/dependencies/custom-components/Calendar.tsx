@@ -15,6 +15,18 @@ import {
   CalendarDays,
 } from '@uselessdev/datepicker'
 
+let allLocales;
+import("date-fns/locale").then(locales => {
+  allLocales = locales;
+  console.log(Object.keys(allLocales))
+});
+
+const getLocale = () => {
+  const locale = navigator.language.replace("-", "");
+  const rootLocale = locale.substring(0, 2);
+  return allLocales[locale] || allLocales[rootLocale]
+};
+
 const WCalendar = props => {
   const value = lodash.get(props.dataSource, props.attribute)
 
@@ -50,22 +62,11 @@ const WCalendar = props => {
     },
   }), [props.borderRadius, props.backgroundColor])
   
-  const MONTHS=['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre']
-  const DAYS='Dim Lun Mar Mer Jeu Ven Sam'.split(' ')
   return (
     <ChakraProvider theme={theme} data-value={date}>
       <div {...props} onClick={undefined} value={date} >
       <Calendar 
-        locale={{
-          localize: {
-            day: d => DAYS[d],
-            month: m => MONTHS[m],
-          },
-          options: {
-            weekStartsOn: 1
-          }
-        }}
-        
+        locale={/** frLocale*/ getLocale()}        
         value={{start: date}} 
         onSelectDate={handleSelectDate}
         singleDateSelection        
