@@ -7,11 +7,11 @@ import * as icons from 'lucide-react'
 const Rating = React.forwardRef(
   ({
     value = 0,
-    size = 20,
+    size = 40,
     illu = 'Star',
     scale = 5,
     fillColor = 'gold',
-    strokeColor = 'gray',
+    strokeColor = 'red',
     onChange,
     readOnly,
     noautosave,
@@ -73,7 +73,6 @@ const Rating = React.forwardRef(
           aria-label={`Notez ${idx}`}
           height={`${size}px`}
           width={`${size}px`}
-          mx={1}
           onClick={() => onClick(idx)}
           _focus={{ outline: 0 }}
         >
