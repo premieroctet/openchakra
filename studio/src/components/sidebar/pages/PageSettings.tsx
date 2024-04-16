@@ -129,6 +129,7 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
                 
                 if (create) {
                   dispatch.project.addPage(pageSettings)
+                  console.log(pageSettings)
                 } else {
                   dispatch.project.editPageSettings({pageId: page, ...pageSettings})
                 }

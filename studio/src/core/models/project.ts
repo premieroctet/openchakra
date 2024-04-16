@@ -43,7 +43,6 @@ export type PageSettings = {
   metaTitle?: string
   metaDescription?: string
   metaImageUrl?: string
-  rootPage: boolean
 }
 
 const DEFAULT_ID = 'root'
@@ -450,7 +449,6 @@ const project = createModel({
             metaTitle,
             metaDescription,
             metaImageUrl,
-            rootPage: false,
           },
         },
       }
