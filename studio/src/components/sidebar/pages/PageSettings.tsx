@@ -102,6 +102,8 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
               <FormLabel ml={2}>Définir en tant que racine</FormLabel>
               <Checkbox
                 isChecked={asRootPage}
+                bgColor={'#5bbdc5'}
+                alignSelf={'start'}
                 name="rootPage" 
                 onChange={() => setAsRootPage(!asRootPage)}
               />
