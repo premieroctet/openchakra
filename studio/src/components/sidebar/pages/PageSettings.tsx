@@ -24,7 +24,7 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
   const rootPageId = useSelector(getRootPageId)
   const [asRootPage, setAsRootPage] = useState(false)
   const {pageName, metaDescription, metaImageUrl, metaTitle} = page !== undefined  ? pages[page] : {pageName: '', metaDescription: '', metaImageUrl: '', metaTitle: ''}
-  const [pageSettings, setPageSettings] = useState({pageName, metaDescription, metaImageUrl, metaTitle })
+  const [pageSettings, setPageSettings] = useState({pageName, metaDescription, metaImageUrl, metaTitle, asRootPage:false })
   const dispatch = useDispatch()
 
   const updatePageSettings = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement> ) => {
@@ -100,7 +100,7 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
               ? <p>Définie en tant que racine</p>
               : <FormControl display={'flex'} alignItems="baseline" >
               <FormLabel ml={2}>Définir en tant que racine</FormLabel>
-              <Checkbox 
+              <Checkbox
                 isChecked={asRootPage}
                 name="rootPage" 
                 onChange={() => setAsRootPage(!asRootPage)}
@@ -125,19 +125,12 @@ const PageSettings = ({create, page, isOpen, onClose}: {create?: boolean, page?:
                 bgColor: 'orange.300',
               }}
               onClick={() => {
-
-                
+                const settings = { ...pageSettings, pageId: page, asRootPage }
                 if (create) {
-                  dispatch.project.addPage(pageSettings)
-                  console.log(pageSettings)
+                  dispatch.project.addPage(settings)
                 } else {
-                  dispatch.project.editPageSettings({pageId: page, ...pageSettings})
+                  dispatch.project.editPageSettings(settings)
                 }
-                
-                if (asRootPage) {
-                  page && dispatch.project.setRootPage(page)
-                }
-
                 onClose()
               }}
             >
