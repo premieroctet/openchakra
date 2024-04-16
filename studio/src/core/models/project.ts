@@ -436,8 +436,7 @@ const project = createModel({
     addPage(state: ProjectState, payload: PageSettings): ProjectState {
       const pageId = generateId('page')
       const { pageName, metaTitle, metaDescription, metaImageUrl } = payload
-
-      return {
+      const newState = {
         ...state,
         pages: {
           ...state.pages,
@@ -451,7 +450,9 @@ const project = createModel({
             metaImageUrl,
           },
         },
+        activePage:pageId
       }
+      return newState
     },
 
     editProjectSettings(state: ProjectState, payload: ProjectSettings): ProjectState {
