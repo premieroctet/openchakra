@@ -350,6 +350,14 @@ export const ACTIONS: IActions = {
     label: 'Save page as PDF',
     options:{}
   },
+  generatePDF: {
+    label: 'Generate PDF',
+    options: {
+      targetId: ({components}) =>
+        components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+    },
+    required:['targetId']
+  },
 
   deactivateAccount: {
     label: 'Deactivate account',
