@@ -1,10 +1,10 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
-const generatePDF = (targetId, fileName) => {
+const generatePDF = (targetId, fileName="export") => {
   const input = document.getElementById(targetId);
-
-  html2canvas(input, { scale: 2, useCORS: true, logging: true, scrollY: -window.scrollY }).then(canvas => {
+  
+  return html2canvas(input, { scale: 2, useCORS: true, logging: true, scrollY: -window.scrollY }).then(canvas => {
     const imgData = canvas.toDataURL('image/png');
     const pdf = new jsPDF({
       orientation: 'p',
@@ -29,8 +29,10 @@ const generatePDF = (targetId, fileName) => {
       heightLeft -= pageHeight;
     }
 
-    pdf.save(`${fileName}.pdf`);
+    return pdf.save(`${fileName}.pdf`);
+    
   });
+
 };
 
 export {generatePDF};
