@@ -2,18 +2,16 @@ import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
 
 async function loadImage(url) {
-  const corsProxy = "https://thingproxy.freeboard.io/fetch/"; // CORS Proxy to handle cross-origin requests
-  const proxiedUrl = corsProxy + url;
+  const timeStampedURL = url+`?timestamp=new ${Date()}`
   return new Promise((resolve, reject) => {
     let img = new Image();
-    img.onload = () => resolve(img); // Resolve the promise when the image is loaded
-    img.onerror = () => reject(new Error(`Failed to load image at ${url}`)); // Reject the promise if there's an error
-    img.src = proxiedUrl;
-    img.crossOrigin = "Anonymous"; // Set cross-origin to anonymous to prevent CORS issues
+    img.onload = () => resolve(img);
+    img.onerror = () => reject(new Error(`Failed to load image at ${url}`));
+    img.src = timeStampedURL;
   });
 }
 
-async function generatePDF(targetId, fileName="export"){
+async function generatePDF(targetId, fileName){
   if (targetId=='root'){targetId='__next'}
   const input = document.getElementById(targetId);
   const imgs= input.querySelectorAll('img')
