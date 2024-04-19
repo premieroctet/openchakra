@@ -51,7 +51,7 @@ async function generatePDF(targetId, fileName){
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
-    fileName=fileName +'_'+moment().format("DD-MM-YYYY"); 
+    fileName=fileName +'_'+moment().format("YYYY-MM-DD-HH-mm-ss"); 
     return pdf.save(`${fileName}.pdf`);
     
   });
