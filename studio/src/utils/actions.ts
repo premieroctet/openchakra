@@ -355,8 +355,12 @@ export const ACTIONS: IActions = {
     options: {
       targetId: ({components}) =>
         components.map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
+      prefix: ({components}) =>
+        components
+          .filter(c => c.type == 'Input')
+          .map(p => ({ key: p.id, label: `${p.type}/${p.id}` })),
     },
-    required:['targetId']
+    required:['targetId', 'prefix']
   },
 
   deactivateAccount: {

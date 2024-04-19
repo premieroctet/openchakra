@@ -1,5 +1,6 @@
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
+var moment = require('moment')
 
 async function loadImage(url) {
   const timeStampedURL = url+`?timestamp=new ${Date()}`
@@ -50,7 +51,7 @@ async function generatePDF(targetId, fileName){
       pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
     }
-
+    fileName=fileName +'_'+moment().format("DD-MM-YYYY"); 
     return pdf.save(`${fileName}.pdf`);
     
   });
