@@ -14,7 +14,7 @@ async function loadImage(url) {
 }
 
 async function generatePDF(targetId, fileName="export"){
-
+  if (targetId=='root'){targetId='__next'}
   const input = document.getElementById(targetId);
   const imgs= input.querySelectorAll('img')
   await Promise.all(Array.from(imgs).map(async (img) => {
