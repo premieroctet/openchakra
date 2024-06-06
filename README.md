@@ -82,6 +82,8 @@ By clicking on a component containing children, you will see a Children panel ap
 
 ## Contributors
 
+This project is being developed by [Premier Octet](https://www.premieroctet.com), a Web and mobile agency specializing in React and React Native developments.
+
 ### Code Contributors
 
 This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
