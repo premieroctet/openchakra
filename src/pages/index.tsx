@@ -11,8 +11,13 @@ import EditorErrorBoundary from '~components/errorBoundaries/EditorErrorBoundary
 import Editor from '~components/editor/Editor'
 import { InspectorProvider } from '~contexts/inspector-context'
 import Inspector from '~components/inspector/Inspector'
+import ResponsiveToolBar from '~components/ResponsiveToolBar'
+import { useSelector } from 'react-redux'
+import { getEditorWidth } from '~core/selectors/app'
 
 const App = () => {
+  const editorWidth = useSelector(getEditorWidth)
+
   useShortcuts()
 
   return (
@@ -28,8 +33,20 @@ const App = () => {
         <Flex h="calc(100vh - 3rem)">
           <Sidebar />
           <EditorErrorBoundary>
-            <Box bg="white" flex={1} position="relative">
-              <Editor />
+            <Box bg="#edf2f6" flex={1} position="relative">
+              <ResponsiveToolBar />
+              <Flex
+                w={editorWidth}
+                transition="all ease 0.5s"
+                h="100%"
+                align="center"
+                justify="center"
+                alignItems="stretch"
+                pt={12}
+                m="0 auto"
+              >
+                <Editor />
+              </Flex>
             </Box>
           </EditorErrorBoundary>
 
