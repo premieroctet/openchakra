@@ -99,11 +99,19 @@ export const menuItems: MenuItems = {
   Skeleton: {},
   SkeletonCircle: {},
   SkeletonText: {},
+  Slider: {
+    children: {
+      Slider: {},
+      SliderTrack: {},
+      SliderFilledTrack: {},
+      SliderThumb: {},
+    },
+  },
   Stack: {},
   Stat: {
     children: {
-      StatGroup: {},
       Stat: {},
+      StatGroup: {},
       StatLabel: {},
       StatNumber: {},
       StatHelpText: {},

@@ -64,6 +64,10 @@ type ComponentType =
   | 'Skeleton'
   | 'SkeletonCircle'
   | 'SkeletonText'
+  | 'Slider'
+  | 'SliderTrack'
+  | 'SliderFilledTrack'
+  | 'SliderThumb'
   | 'Stack'
   | 'Stat'
   | 'StatLabel'
@@ -90,6 +94,7 @@ type MetaComponentType =
   | 'BreadcrumbMeta'
   | 'TabsMeta'
   | 'StatMeta'
+  | 'SliderMeta'
 
 interface IComponent {
   children: string[]
